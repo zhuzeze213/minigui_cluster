@@ -1,3 +1,4 @@
+/* fuzzy cluster algorithm fcm main program       author:zhuyouze*/
 #include "mystd.h"
 
 double **distfcm(double **center,int **data,int cluster_n,int data_n)
