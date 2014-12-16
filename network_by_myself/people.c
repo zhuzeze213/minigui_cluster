@@ -375,7 +375,8 @@ void change_print_adj()
 	int i,j;
 	for(i=0;i<MAX_PEOPLE;i++)
 		for(j=0;j<MAX_PEOPLE;j++)
-			people_adj[i][j]=people_adj[j][i];
+			if(people_adj[j][i]==1)
+				people_adj[i][j]=people_adj[j][i];
 	for(i=0;i<MAX_PEOPLE;i++){
 		for(j=0;j<MAX_PEOPLE;j++)
 			fprintf(fp,"%d ",people_adj[i][j]);
