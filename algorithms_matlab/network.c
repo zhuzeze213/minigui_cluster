@@ -140,6 +140,17 @@ int init_network(struct network *network,int row,int column,int node,int edge,BO
 		return ERROR; 
 }
 
+int copy_matrix_double(double *old,double **new,int length)
+{
+	if(old&&*new){
+		int i;
+		for(i=0;i<length;i++)
+			(*new)[i]=old[i];
+			
+		return DONE;
+	}
+	return ERROR;
+}
 int copy_2_matrix(int **old,int ***new,int row,int column)
 {
 	if(old&&new){
@@ -154,7 +165,19 @@ int copy_2_matrix(int **old,int ***new,int row,int column)
 
 int copy_2_matrix_double(double **old,double ***new,int row,int column)
 {
-		if(old&&new){
+	if(old&&new){
+		int i,j;
+		for(i=0;i<row;i++)
+			for(j=0;j<column;j++)
+				(*new)[i][j]=old[i][j];
+		return DONE;
+	}
+	return ERROR;
+}
+
+int copy_2_matrix_double_int_1(int **old,double ***new,int row,int column)
+{
+	if(old&&new){
 		int i,j;
 		for(i=0;i<row;i++)
 			for(j=0;j<column;j++)

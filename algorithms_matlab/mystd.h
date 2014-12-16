@@ -31,6 +31,18 @@
 #define YE_POWER 0
 
 #define BUFFERSIZE 4096
+struct edge_struct
+{
+	int from;
+	int dest;
+	int value;
+}
+
+struct sparse_struct
+{
+	int edes;
+	struct edge_struct *edegs;
+}
 
 struct network
 {
@@ -52,8 +64,10 @@ void free_2_matrix(int ***matrix,int row);
 double **init_2_matrix_double(int row,int column);
 void free_2_matrix_double(double ***matrix,int row);
 
+int copy_matrix_double(double *old,double **new,int length);
 int copy_2_matrix(int **old,int ***new,int row,int column);
 int copy_2_matrix_double(double **old,double ***new,int row,int column);
+int copy_2_matrix_double_int_1(int **old,double ***new,int row,int column);
 void print_matrix_double(double *adj,int length);
 void print_2_matrix_double(double **adj,int row,int column);
 
@@ -78,8 +92,17 @@ int **create_diag(int *v,int n,int pos);
 double **copy_double(double *old,int copy,int length);
 double **matrix_operate_double(double **pri,double **beh,char ope,int row,int column);
 double **matrix_operate_double_int_1(int **pri,double **beh,char ope,int row,int column);
+double **matrix_operate_double_int_2(double **pri,int **beh,char ope,int row,int column);
 double **matrix_multiply(double **pri,double **beh,int row1,int column1,int row2,int column2);
 double **matrix_multiply_int_2(double **pri,int **beh,int row1,int column1,int row2,int column2);
 
+/* feclib.c */
+int find(int **adj,int **r,int **c,int **v,int edge,int row,int column);
+int find_double(double **adj,int **r,int **c,double **v,int edge,int row,int column);
+int *sort(int *D,int **s_D,int length);
+int sum_1(int *D,int length);
+double sum_1_double(double *D,int length);
+int edge_matrix_double(double **adj,int row,int column);
 
 #endif
+

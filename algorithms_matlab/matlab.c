@@ -388,7 +388,48 @@ double **matrix_operate_double_int_1(int **pri,double **beh,char ope,int row,int
 	}	
 		return adj;	
 }
-	
+
+double **matrix_operate_double_int_2(double **pri,int **beh,char ope,int row,int column)
+{
+	int i,j;
+	double **adj=init_2_matrix_double(row,column);
+	switch(ope){
+		case '+':{
+			for(i=0;i<row;i++)
+				for(j=0;j<column;j++)
+						adj[i][j]=pri[i][j]+beh[i][j];
+						
+			break;
+		}
+		
+		case '-':{
+			for(i=0;i<row;i++)
+				for(j=0;j<column;j++)
+						adj[i][j]=pri[i][j]-beh[i][j];
+						
+			break;
+		}
+		
+		case '*':{
+			for(i=0;i<row;i++)
+				for(j=0;j<column;j++)
+						adj[i][j]=pri[i][j]*beh[i][j];
+						
+			break;
+		}
+		
+		case '/':{
+			for(i=0;i<row;i++)
+				for(j=0;j<column;j++)
+						adj[i][j]=pri[i][j]/beh[i][j];
+						
+			break;
+		}
+		
+		default: return NULL;
+	}	
+		return adj;	
+}
 double **matrix_multiply(double **pri,double **beh,int row1,int column1,int row2,int column2)
 {
 	if(column1!=row2) return NULL;
