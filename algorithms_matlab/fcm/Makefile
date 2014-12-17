@@ -16,4 +16,4 @@ fcm.o:fcm.c mystd.h
 	$(CC) -c fcm.c -o fcm.o	
 	
 clean:
-	rm -rf *.o
+	rm -rf *.o fcm

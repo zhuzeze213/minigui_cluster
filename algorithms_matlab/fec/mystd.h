@@ -36,17 +36,28 @@ struct edge_struct
 	int from;
 	int dest;
 	int value;
-}
+};
 
 struct sparse_struct
 {
 	int edes;
 	struct edge_struct *edegs;
-}
+};
 
 struct network
 {
 	int **adj;
+	int row;
+	int column;
+	int node;
+	int edge;
+	BOOL direct;
+	BOOL power;
+};
+
+struct network_double
+{
+	double **adj;
 	int row;
 	int column;
 	int node;
@@ -64,12 +75,18 @@ void free_2_matrix(int ***matrix,int row);
 double **init_2_matrix_double(int row,int column);
 void free_2_matrix_double(double ***matrix,int row);
 
-int copy_matrix_double(double *old,double **new,int length);
+int copy_matrix(int *old,int **new,int start,int end);
+int copy_matrix_double(double *old,double **new,int start,int end); //n
 int copy_2_matrix(int **old,int ***new,int row,int column);
 int copy_2_matrix_double(double **old,double ***new,int row,int column);
+int copy_2_matrix_double_scope(double **old,double ***new,int row1,int column1,int row2,int column2);//
 int copy_2_matrix_double_int_1(int **old,double ***new,int row,int column);
+void print_matrix(int *adj,int length);
 void print_matrix_double(double *adj,int length);
 void print_2_matrix_double(double **adj,int row,int column);
+
+int **loadmatrix(char *filename,struct network *network);
+double **loadmatrix_double(char *filename,struct network_double *network);
 
 /* matlab.c */
 int size(int ***matrix,int num);
@@ -97,12 +114,13 @@ double **matrix_multiply(double **pri,double **beh,int row1,int column1,int row2
 double **matrix_multiply_int_2(double **pri,int **beh,int row1,int column1,int row2,int column2);
 
 /* feclib.c */
-int find(int **adj,int **r,int **c,int **v,int edge,int row,int column);
+int find_int(int **adj,int **r,int **c,int **v,int edge,int row,int column);
 int find_double(double **adj,int **r,int **c,double **v,int edge,int row,int column);
 int *sort(int *D,int **s_D,int length);
+int *sort_double(double *D,double **s_D,int length);
 int sum_1(int *D,int length);
 double sum_1_double(double *D,int length);
 int edge_matrix_double(double **adj,int row,int column);
-
+int min_double(double *D,double *min,int length);
 #endif
 

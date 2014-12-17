@@ -1,13 +1,7 @@
 #include "mystd.h"
 
-int find(int **adj,int **r,int **c,int **v,int edge,int row,int column)
+int find_int(int **adj,int **r,int **c,int **v,int edge,int row,int column)
 {
-	if(*r)
-		*r=init_matrix(edge);
-	if(*c)
-		*c=init_matrix(edge);
-	if(*v)
-		*v=init_matrix(edge);
 	if(*r&&*c&&*v){
 		int i,j;int rc=0,cc=0,vc=0;
 		for(i=0;i<row;i++){
@@ -26,12 +20,6 @@ int find(int **adj,int **r,int **c,int **v,int edge,int row,int column)
 }
 int find_double(double **adj,int **r,int **c,double **v,int edge,int row,int column)
 {
-	if(*r)
-		*r=init_matrix(edge);
-	if(*c)
-		*c=init_matrix(edge);
-	if(*v)
-		*v=init_matrix_double(edge);
 	if(*r&&*c&&*v){
 		int i,j;int rc=0,cc=0,vc=0;
 		for(i=0;i<row;i++){
@@ -93,6 +81,7 @@ int *sort_double(double *D,double **s_D,int length)
 			D[minindex]=INT_MAX;
 			min=INT_MAX*1.0;minindex=-1;
 		}
+		return IX;
 	}
 	return NULL;
 			
@@ -111,7 +100,7 @@ double sum_1_double(double *D,int length)
 {
 	if(!D) return ERROR;
 	int i;
-	double sum=0;
+	double sum=0.0;
 	for(i=0;i<length;i++)
 		sum+=D[i];
 	return sum;	
@@ -130,8 +119,22 @@ int edge_matrix_double(double **adj,int row,int column)
 	}
 	return edge;
 }
-
-
+/* find the minmum num and return the index */
+int min_double(double *D,double *min,int length)
+{
+	if(!D) return ERROR;
+	int i;
+	int minindex=-1;
+	*min=INT_MAX*1.0;
+	for(i=0;i<length;i++){
+		if(D[i]<*min){
+			*min=D[i];
+			minindex=i;
+		}
+	}
+	return minindex;
+	
+}
 
 
 
