@@ -59,7 +59,7 @@ int FC(double **B,int *pos,double *EP1,double *EP2,int length,int row,int column
 	copy_matrix_double(T1,T1_copy,0,n-1,0);
 	T1=init_matrix_double(n-1);
 	copy_matrix_double(T1_copy,T1,0,n-1,0);
-	
+	free_matrix_double(T1_copy);
 	double *S2=init_matrix_double(n);
 	double *T2=init_matrix_double(n);
 	for(r=NNZ-1;r>=0;r--){
@@ -79,7 +79,7 @@ int FC(double **B,int *pos,double *EP1,double *EP2,int length,int row,int column
 	copy_matrix_double(T2,T2_copy,1,n,0);
 	T2=init_matrix_double(n-1);
 	copy_matrix_double(T2_copy,T2,0,n-1,0);
-	
+	free_matrix_double(T2_copy);
 	double *E1=init_matrix_double(n-1);
 	double *E2=init_matrix_double(n-1);
 	for(*pos=0;*pos<n-1;(*pos)++){
@@ -95,6 +95,17 @@ int FC(double **B,int *pos,double *EP1,double *EP2,int length,int row,int column
 	*pos=min_double(Pcut,&pcut,n-1);
 	*EP1=1-T1[*pos];
 	*EP2=1-T2[*pos];
+	
+	free_matrix(i);
+	free_matrix(j);
+	free_matrix_double(V);
+	free_matrix_double(S1);
+	free_matrix_double(T1);
+	free_matrix_double(S2);
+	free_matrix_double(T2);
+	free_matrix_double(E1);
+	free_matrix_double(E2);
+	free_matrix_double(Pcut);
 	return DONE;
 }
 
@@ -152,6 +163,8 @@ void PL(double **W,double *W_names,double error,int *pos,double *EP1,double *EP2
 		err=sum_1_double(tmp,n);
 		steps++;
 		copy_matrix_double(R1,R0,0,n,0);
+		free_matrix_double(S);
+		free_matrix_double(tmp);
 	}
 	double *SR=init_matrix_double(n);
 	int *IX2=sort_double(R1,SR,n);
@@ -174,6 +187,22 @@ void PL(double **W,double *W_names,double error,int *pos,double *EP1,double *EP2
 		new_P[x][y]=VP[r];
 	}
 	FC(new_P,pos,EP1,EP2,n,n,n);
+	
+	free_matrix(i);
+	free_matrix(j);
+	free_matrix_double(v);
+	free_matrix_double(D);
+	free_2_matrix_double(p,row);
+	free_matrix_double(s_D);
+	free_matrix(IX);
+	free_matrix_double(R0);
+	free_matrix_double(R1);
+	free_matrix_double(SR);
+	free_matrix(IX2);
+	free_matrix(flection);
+	free_matrix(i1);
+	free_matrix(j1);
+	free_matrix_double(VP);
 }
 
 /* [new_W,new_W_names,H,id] = NCMA(W,W_names,H,id,err); */
@@ -191,7 +220,7 @@ void NCMA(double **W,double *W_names,int **H,int *id,double err,double **new_W,d
 		
 		makeH(H,*id,W_A_names,0,pos,n);
 		(*id)++;
-		if(pos>1){
+		if(pos>0){
 			NCMA(W_A,W_A_names,H,id,err,W_A,W_A_names,edge_matrix_double(W_A,pos,pos),pos,pos);printf("1\n");
 		}
 		double **W_B=init_2_matrix_double(n-pos,n-pos);
@@ -201,7 +230,7 @@ void NCMA(double **W,double *W_names,int **H,int *id,double err,double **new_W,d
 		makeH(H,*id,W_B_names,pos,n,n);
 //		print_2_matrix(H,n,n);
 		(*id)++;
-		if(n-pos>1){
+		if(n-pos>0){
 			NCMA(W_B,W_B_names,H,id,err,W_B,W_B_names,edge_matrix_double(W_B,n-pos,n-pos),n-pos,n-pos);printf("2\n");
 		}
 		copy_2_matrix_double_scope(W_A,new_W,0,0,pos,pos,0,0);
@@ -209,6 +238,11 @@ void NCMA(double **W,double *W_names,int **H,int *id,double err,double **new_W,d
 		
 		copy_matrix_double(W_A_names,new_W_names,0,pos,0);
 		copy_matrix_double(W_B_names,new_W_names,pos,n,pos);
+		
+		free_2_matrix_double(W_A,pos);
+		free_2_matrix_double(W_B,n-pos);
+		free_matrix_double(W_A_names);
+		free_matrix_double(W_B_names);
 	}		
 }
 
@@ -227,6 +261,11 @@ void fec(double **adj,int row,int column,int edge)
 	double *new_W_names=init_matrix_double(n);
 	NCMA(adj,W_names,H,&id,err,new_W,new_W_names,edge,row,column);
 	print_2_matrix(H,n,n);
+	
+	free_matrix_double(W_names);
+	free_matrix_double(new_W_names);
+	free_2_matrix_double(new_W,n);
+	free_2_matrix(H,n);
 //	print_2_matrix_double(new_W,n,n);
 	
 }

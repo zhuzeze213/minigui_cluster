@@ -59,6 +59,7 @@ int *sort(int *D,int *s_D,int length)
 			min=INT_MAX;minindex=-1;
 		}
 		copy_matrix(D_copy,D,0,length,0);
+		free_matrix(D_copy);
 		return IX;
 	}
 	return NULL;
@@ -88,6 +89,7 @@ int *sort_double(double *D,double *s_D,int length)
 			min=INT_MAX*1.0;minindex=-1;
 		}
 		copy_matrix_double(D_copy,D,0,length,0);
+		free_matrix_double(D_copy);
 		return IX;
 	}
 	return NULL;
