@@ -15,7 +15,9 @@ void makeH(int **H,int id,double *names,int first,int last,int length)
 {
 	int c;
 	for(c=first;c<last;c++){
-		double v=names[c-first+1];
+		double v=names[c-first];
+//		print_matrix_double(names,length);
+//		printf("%d\n",(int)v);
 		int col=find_first_col(H,(int)v,length);
 		H[(int)v][col]=id;
 	}
@@ -54,7 +56,9 @@ int FC(double **B,int *pos,double *EP1,double *EP2,int length,int row,int column
 		T1[r]=S1[r]/r;
 	}
 	double *T1_copy=init_matrix_double(n-1);
-	copy_matrix_double(T1,T1_copy,0,n-1);
+	copy_matrix_double(T1,T1_copy,0,n-1,0);
+	T1=init_matrix_double(n-1);
+	copy_matrix_double(T1_copy,T1,0,n-1,0);
 	
 	double *S2=init_matrix_double(n);
 	double *T2=init_matrix_double(n);
@@ -69,10 +73,12 @@ int FC(double **B,int *pos,double *EP1,double *EP2,int length,int row,int column
 	}
 	for(r=n-2;r>=0;r--){
 		S2[r]=S2[r+1]+S2[r];
-		T2[r]=S2[r]/(n-r+2);
+		T2[r]=S2[r]/(n-r+1);
 	}
 	double *T2_copy=init_matrix_double(n-1);
-	copy_matrix_double(T2,T2_copy,1,n);
+	copy_matrix_double(T2,T2_copy,1,n,0);
+	T2=init_matrix_double(n-1);
+	copy_matrix_double(T2_copy,T2,0,n-1,0);
 	
 	double *E1=init_matrix_double(n-1);
 	double *E2=init_matrix_double(n-1);
@@ -113,17 +119,17 @@ void PL(double **W,double *W_names,double error,int *pos,double *EP1,double *EP2
 		int y=j[r];
 		double w=v[r];
 		if(D[x]!=0)
-			p[x][y]=w/D[x]*1.0;
+			p[x][y]=w*1.0/D[x];
 	}
 	double *s_D=init_matrix_double(n);
 	int *IX=sort_double(D,s_D,n);
 	int sink=IX[n-1];
-	double pi_pink=D[sink]/sum_1_double(D,n)*1.0;
+	double pi_pink=D[sink]*1.0/sum_1_double(D,n);
 	double *R0=init_matrix_double(n);
 	R0[sink]=1.0;
 	
 	double *R1=init_matrix_double(n);
-	copy_matrix_double(R0,R1,0,n);
+	copy_matrix_double(R0,R1,0,n,0);
 	double err=1.0;
 	int steps=0;
 	
@@ -135,7 +141,7 @@ void PL(double **W,double *W_names,double error,int *pos,double *EP1,double *EP2
 		
 		for(r=0;r<n;r++){
 			if(D[r]!=0)
-				R1[r]=S[r]/D[r]*1.0;
+				R1[r]=S[r]*1.0/D[r];
 			else
 				R1[r]=0.0;
 		}
@@ -145,7 +151,7 @@ void PL(double **W,double *W_names,double error,int *pos,double *EP1,double *EP2
 			tmp[r]=fabs(R1[r]-R0[r]);
 		err=sum_1_double(tmp,n);
 		steps++;
-		copy_matrix_double(R1,R0,0,n);
+		copy_matrix_double(R1,R0,0,n,0);
 	}
 	double *SR=init_matrix_double(n);
 	int *IX2=sort_double(R1,SR,n);
@@ -179,30 +185,30 @@ void NCMA(double **W,double *W_names,int **H,int *id,double err,double **new_W,d
 	printf("%d %f %f\n",pos,EP1,EP2);
 	if(EP1<0.5&&EP2<0.5){
 		double **W_A=init_2_matrix_double(pos,pos);
-		copy_2_matrix_double_scope(new_W,W_A,0,0,pos,pos);
+		copy_2_matrix_double_scope(new_W,W_A,0,0,pos,pos,0,0);
 		double *W_A_names=init_matrix_double(pos);
-		copy_matrix_double(new_W_names,W_A_names,0,pos);
+		copy_matrix_double(new_W_names,W_A_names,0,pos,0);
 		
 		makeH(H,*id,W_A_names,0,pos,n);
 		(*id)++;
-		if(pos>0){
+		if(pos>1){
 			NCMA(W_A,W_A_names,H,id,err,W_A,W_A_names,edge_matrix_double(W_A,pos,pos),pos,pos);printf("1\n");
 		}
 		double **W_B=init_2_matrix_double(n-pos,n-pos);
-		copy_2_matrix_double_scope(new_W,W_B,pos,pos,n,n);
+		copy_2_matrix_double_scope(new_W,W_B,pos,pos,n,n,0,0);
 		double *W_B_names=init_matrix_double(n-pos);
-		copy_matrix_double(new_W_names,W_B_names,pos,n);
+		copy_matrix_double(new_W_names,W_B_names,pos,n,0);
 		makeH(H,*id,W_B_names,pos,n,n);
 //		print_2_matrix(H,n,n);
 		(*id)++;
 		if(n-pos>1){
 			NCMA(W_B,W_B_names,H,id,err,W_B,W_B_names,edge_matrix_double(W_B,n-pos,n-pos),n-pos,n-pos);printf("2\n");
 		}
-//		copy_2_matrix_double_scope(W_A,new_W,0,0,pos,pos);
-//		copy_2_matrix_double_scope(W_B,new_W,pos,pos,n,n);
+		copy_2_matrix_double_scope(W_A,new_W,0,0,pos,pos,0,0);
+		copy_2_matrix_double_scope(W_B,new_W,0,0,n-pos,n-pos,pos,pos);
 		
-//		copy_matrix_double(W_A_names,new_W_names,0,pos);
-//		copy_matrix_double(W_B_names,new_W_names,pos,n);
+		copy_matrix_double(W_A_names,new_W_names,0,pos,0);
+		copy_matrix_double(W_B_names,new_W_names,pos,n,pos);
 	}		
 }
 
@@ -211,7 +217,7 @@ void fec(double **adj,int row,int column,int edge)
 	int n=MAX(row,column);//length(W)
 	double err=pow(0.1,7);
 	int **H=init_2_matrix(n,n);
-	int id=1;
+	int id=0;
 	edge*=2;
 	int c;
 	double *W_names=init_matrix_double(n);
@@ -221,6 +227,8 @@ void fec(double **adj,int row,int column,int edge)
 	double *new_W_names=init_matrix_double(n);
 	NCMA(adj,W_names,H,&id,err,new_W,new_W_names,edge,row,column);
 	print_2_matrix(H,n,n);
+//	print_2_matrix_double(new_W,n,n);
+	
 }
 
 int main(int argc,char *argv[])

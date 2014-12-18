@@ -41,7 +41,7 @@ int *sort(int *D,int *s_D,int length)
 {
 	int *IX=init_matrix(length);
 	int *D_copy=init_matrix(length);
-	copy_matrix(D,D_copy,0,length);
+	copy_matrix(D,D_copy,0,length,0);
 	if(s_D&&IX){
 		int i,j;int min=INT_MAX,minindex=-1;
 		int sortc=0;
@@ -58,7 +58,7 @@ int *sort(int *D,int *s_D,int length)
 			D[minindex]=INT_MAX;
 			min=INT_MAX;minindex=-1;
 		}
-		copy_matrix(D_copy,D,0,length);
+		copy_matrix(D_copy,D,0,length,0);
 		return IX;
 	}
 	return NULL;
@@ -69,7 +69,7 @@ int *sort_double(double *D,double *s_D,int length)
 {
 	int *IX=init_matrix(length);
 	double *D_copy=init_matrix_double(length);
-	copy_matrix_double(D,D_copy,0,length);
+	copy_matrix_double(D,D_copy,0,length,0);
 	if(s_D&&IX){
 		int i,j;double min=INT_MAX*1.0;
 		int minindex=-1;
@@ -87,7 +87,7 @@ int *sort_double(double *D,double *s_D,int length)
 			D[minindex]=INT_MAX*1.0;
 			min=INT_MAX*1.0;minindex=-1;
 		}
-		copy_matrix_double(D_copy,D,0,length);
+		copy_matrix_double(D_copy,D,0,length,0);
 		return IX;
 	}
 	return NULL;

@@ -75,11 +75,11 @@ void free_2_matrix(int **matrix,int row);
 double **init_2_matrix_double(int row,int column);
 void free_2_matrix_double(double **matrix,int row);
 
-int copy_matrix(int *old,int *new,int start,int end);
-int copy_matrix_double(double *old,double *new,int start,int end); //n
+int copy_matrix(int *old,int *new,int start,int end,int start2);
+int copy_matrix_double(double *old,double *new,int start,int end,int start2); //n
 int copy_2_matrix(int **old,int **new,int row,int column);
 int copy_2_matrix_double(double **old,double **new,int row,int column);
-int copy_2_matrix_double_scope(double **old,double **new,int row1,int column1,int row2,int column2);//
+int copy_2_matrix_double_scope(double **old,double **new,int sx,int sy,int ex,int ey,int sx2,int sy2);//
 int copy_2_matrix_double_int_1(int **old,double **new,int row,int column);
 void print_matrix(int *adj,int length);
 void print_matrix_double(double *adj,int length);

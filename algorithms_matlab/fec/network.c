@@ -174,25 +174,27 @@ int init_network_double(struct network_double *network,int row,int column,int no
                 return ERROR;
 }
 
-int copy_matrix(int *old,int *new,int start,int end)
+int copy_matrix(int *old,int *new,int start,int end,int start2)
 {
 	if(old&&new){
-		int i;
-		for(i=start;i<end;i++)
-			new[i]=old[i];
-			
+		int i,j=start2;
+		for(i=start;i<end;i++){
+			new[j]=old[i];
+			j++;
+		}
 		return DONE;
 	}
 	return ERROR;
 }
 
-int copy_matrix_double(double *old,double *new,int start,int end)
+int copy_matrix_double(double *old,double *new,int start,int end,int start2)
 {
 	if(old&&new){
-		int i;
-		for(i=start;i<end;i++)
-			new[i]=old[i];
-			
+		int i,j=start2;
+		for(i=start;i<end;i++){
+			new[j]=old[i];
+			j++;
+		}
 		return DONE;
 	}
 	return ERROR;
@@ -221,17 +223,17 @@ int copy_2_matrix_double(double **old,double **new,int row,int column)
 	return ERROR;
 }
 
-int copy_2_matrix_double_scope(double **old,double **new,int row1,int column1,int row2,int column2)
+int copy_2_matrix_double_scope(double **old,double **new,int sx,int sy,int ex,int ey,int sx2,int sy2)
 {
 	if(old&&new){
-		int i,j,x=0,y=0;
-		for(i=row1;i<row2;i++){
-			for(j=column1;j<column2;j++){
+		int i,j,x=sx2,y=sy2;
+		for(i=sx;i<ex;i++){
+			for(j=sy;j<ey;j++){
 				new[x][y]=old[i][j];
 				y++;
 			}
 			x++;
-			y=0;
+			y=sy2;
 		}
 		return DONE;
 	}
