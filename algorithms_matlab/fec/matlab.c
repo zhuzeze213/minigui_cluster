@@ -10,7 +10,7 @@ double option(double fcm[],int num)
 	else return ERROR;
 }
 
-/*Function size(int ***adj,int num)  if num==1 return row,if num==2 return column*/
+/*Function size(int ***adj,int num)  if num==1 return row,if num==2 return column.no use!*/
 int size(int ***matrix,int num)
 {
 	if(matrix&&*matrix){
@@ -25,7 +25,7 @@ int size(int ***matrix,int num)
 		return ERROR;
 }
 
-/* Function length(int ***adj) return the max between row and column */
+/* Function length(int ***adj) return the max between row and column no use!*/
 int length(int ***matrix)
 {
 	if(matrix!=NULL){
@@ -57,28 +57,28 @@ int *find(int *matrix,int column)
 
 }
 
-int fill(int ***adj,int num,int row,int column)
+int fill(int **adj,int num,int row,int column)
 {
 	if(adj){
 		int i,j;
 		for(i=0;i<row;i++)
 			for(j=0;j<column;j++)
-				(*adj)[i][j]=num;
+				adj[i][j]=num;
 		return DONE;
 	}
 	return ERROR;
 }
 
-int fill_double(double ***adj,double num,int row,int column) 
+int fill_double(double **adj,double num,int row,int column) 
 {
         if(adj){
                 int i,j;
                 for(i=0;i<row;i++){
                         for(j=0;j<column;j++){
 							if(num==RAND)
-								(*adj)[i][j]=(double)(rand()/(INT_MAX/1.0));
+								adj[i][j]=(double)(rand()/(INT_MAX/1.0));
 							else
-								(*adj)[i][j]=num;
+								adj[i][j]=num;
 						}
 				}
                 return DONE;
@@ -90,7 +90,7 @@ int **zeros(int row,int column)
 {
 	int **adj;
 	if(adj=init_2_matrix(row,column)){
-		if(fill(&adj,0,row,column)==DONE)
+		if(fill(adj,0,row,column)==DONE)
 			return adj;
 	}
 	return NULL;
@@ -100,7 +100,7 @@ double **zeros_double(int row,int column)
 {
 	double **adj;
 	if(adj=init_2_matrix_double(row,column)){
-		if(fill_double(&adj,0.0,row,column)==DONE)
+		if(fill_double(adj,0.0,row,column)==DONE)
 			return adj;
 	}
 	return NULL;
@@ -110,7 +110,7 @@ int **ones(int row,int column)
 {
 	int **adj;
 	if(adj=init_2_matrix(row,column)){
-		if(fill(&adj,1,row,column)==DONE)
+		if(fill(adj,1,row,column)==DONE)
 			return adj;
 	}
 	return NULL;
@@ -120,7 +120,7 @@ double **ones_double(int row,int column)
 {
 	double **adj;
 	if(adj=init_2_matrix_double(row,column)){
-		if(fill_double(&adj,1.0,row,column)==DONE)
+		if(fill_double(adj,1.0,row,column)==DONE)
 			return adj;
 	}
 	return NULL;
@@ -130,7 +130,7 @@ double **rand_matlab(int row,int column)
 {
 	double **adj;
 	if(adj=init_2_matrix_double(row,column)){
-		if(fill_double(&adj,RAND,row,column)==DONE)
+		if(fill_double(adj,RAND,row,column)==DONE)
 			return adj;
 	}
 	return NULL;

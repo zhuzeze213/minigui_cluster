@@ -12,9 +12,9 @@ int *init_matrix(int num)
 	return NULL;
 }
 
-void free_matrix(int **matrix)
+void free_matrix(int *matrix)
 {
-	free(*matrix);
+	free(matrix);
 }
 
 double *init_matrix_double(int num)
@@ -29,9 +29,9 @@ double *init_matrix_double(int num)
 	return NULL;
 }
 
-void free_matrix_double(double **matrix)
+void free_matrix_double(double *matrix)
 {
-	free(*matrix);
+	free(matrix);
 }
 
 int **init_2_matrix(int row,int column)
@@ -60,14 +60,12 @@ int **init_2_matrix(int row,int column)
 	return adj;
 }
 
-void free_2_matrix(int ***matrix,int row)
+void free_2_matrix(int **matrix,int row)
 {
 	int i;
 	for(i=0;i<row;i++)
-		if((*matrix)[i])
-			free((*matrix)[i]);
-	if(*matrix)
-            free(*matrix);
+		free(matrix[i]);
+	free(matrix);
 
 }
 
@@ -97,35 +95,48 @@ double **init_2_matrix_double(int row,int column)
 	return adj;
 }
 
-void free_2_matrix_double(double ***matrix,int row)
+void free_2_matrix_double(double **matrix,int row)
 {
 	int i;
 	for(i=0;i<row;i++)
-		if((*matrix)[i])
-			free((*matrix)[i]);
-	if(*matrix)
-		free(*matrix);
+		free(matrix[i]);
+	free(matrix);
 }
 
 void print_matrix(int *adj,int length)
 {
 	int i;
-        for(i=0;i<length;i++)
-                printf("%d ",adj[i]);
-        printf("\n\n");
+	if(!adj) printf("adj is null\n");
+    for(i=0;i<length;i++)
+        printf("%d ",adj[i]);
+    printf("\n\n");
 }
 
 void print_matrix_double(double *adj,int length)
 {
 	int i;
+	if(!adj) printf("adj is null\n");
 	for(i=0;i<length;i++)
 		printf("%f ",adj[i]);
 	printf("\n\n");
 }
 
+void print_2_matrix(int **adj,int row,int column)
+{
+	int i,j;
+	if(!adj) printf("adj is null\n");
+	for(i=0;i<row;i++){
+		for(j=0;j<column;j++)
+			printf("%d ",adj[i][j]);
+		printf("\n");
+	}
+	printf("\n");
+}
+
 void print_2_matrix_double(double **adj,int row,int column)
 {
 	int i,j;
+	if(!adj) printf("adj is null\n");
 	for(i=0;i<row;i++){
 		for(j=0;j<column;j++)
 			printf("%f ",adj[i][j]);
@@ -163,71 +174,76 @@ int init_network_double(struct network_double *network,int row,int column,int no
                 return ERROR;
 }
 
-int copy_matrix(int *old,int **new,int start,int end)
+int copy_matrix(int *old,int *new,int start,int end)
 {
 	if(old&&new){
 		int i;
 		for(i=start;i<end;i++)
-			(*new)[i]=old[i];
+			new[i]=old[i];
 			
 		return DONE;
 	}
 	return ERROR;
 }
 
-int copy_matrix_double(double *old,double **new,int start,int end)
+int copy_matrix_double(double *old,double *new,int start,int end)
 {
 	if(old&&new){
 		int i;
 		for(i=start;i<end;i++)
-			(*new)[i]=old[i];
+			new[i]=old[i];
 			
 		return DONE;
 	}
 	return ERROR;
 }
-int copy_2_matrix(int **old,int ***new,int row,int column)
+int copy_2_matrix(int **old,int **new,int row,int column)
 {
 	if(old&&new){
 		int i,j;
 		for(i=0;i<row;i++)
 			for(j=0;j<column;j++)
-				(*new)[i][j]=old[i][j];
+				new[i][j]=old[i][j];
 		return DONE;
 	}
 	return ERROR;
 }
 
-int copy_2_matrix_double(double **old,double ***new,int row,int column)
+int copy_2_matrix_double(double **old,double **new,int row,int column)
 {
 	if(old&&new){
 		int i,j;
 		for(i=0;i<row;i++)
 			for(j=0;j<column;j++)
-				(*new)[i][j]=old[i][j];
+				new[i][j]=old[i][j];
 		return DONE;
 	}
 	return ERROR;
 }
 
-int copy_2_matrix_double_scope(double **old,double ***new,int row1,int column1,int row2,int column2)
+int copy_2_matrix_double_scope(double **old,double **new,int row1,int column1,int row2,int column2)
 {
 	if(old&&new){
-		int i,j;
-		for(i=row1;i<row2;i++)
-			for(j=column1;j<column2;j++)
-				(*new)[i][j]=old[i][j];
+		int i,j,x=0,y=0;
+		for(i=row1;i<row2;i++){
+			for(j=column1;j<column2;j++){
+				new[x][y]=old[i][j];
+				y++;
+			}
+			x++;
+			y=0;
+		}
 		return DONE;
 	}
 	return ERROR;
 }
-int copy_2_matrix_double_int_1(int **old,double ***new,int row,int column)
+int copy_2_matrix_double_int_1(int **old,double **new,int row,int column)
 {
 	if(old&&new){
 		int i,j;
 		for(i=0;i<row;i++)
 			for(j=0;j<column;j++)
-				(*new)[i][j]=old[i][j];
+				new[i][j]=old[i][j];
 		return DONE;
 	}
 	return ERROR;
@@ -278,7 +294,7 @@ int **loadmatrix(char *filename,struct network *network)
 		}
 	}
 	fclose(fp);
-	if(copy_2_matrix(adj,&(network->adj),node,node)==ERROR)
+	if(copy_2_matrix(adj,network->adj,node,node)==ERROR)
 		return NULL;
 	
 	int x,y;int edges=0;
@@ -342,7 +358,7 @@ double **loadmatrix_double(char *filename,struct network_double *network)
 		}
 	}
 	fclose(fp);
-	if(copy_2_matrix_double(adj,&(network->adj),node,node)==ERROR)
+	if(copy_2_matrix_double(adj,network->adj,node,node)==ERROR)
 		return NULL;
 	
 	int x,y;int edges=0;

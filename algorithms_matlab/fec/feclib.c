@@ -1,15 +1,15 @@
 #include "mystd.h"
 
-int find_int(int **adj,int **r,int **c,int **v,int edge,int row,int column)
+int find_int(int **adj,int *r,int *c,int *v,int edge,int row,int column)
 {
-	if(*r&&*c&&*v){
+	if(r&&c&&v){
 		int i,j;int rc=0,cc=0,vc=0;
 		for(i=0;i<row;i++){
 			for(j=0;j<column;j++){
 				if(adj[i][j]!=0){
-					(*r)[rc]=i;
-					(*c)[cc]=j;
-					(*v)[vc]=adj[i][j];
+					r[rc]=i;
+					c[cc]=j;
+					v[vc]=adj[i][j];
 					rc++;cc++;vc++;
 				}
 			}
@@ -18,16 +18,16 @@ int find_int(int **adj,int **r,int **c,int **v,int edge,int row,int column)
 	}
 	return ERROR;
 }
-int find_double(double **adj,int **r,int **c,double **v,int edge,int row,int column)
+int find_double(double **adj,int *r,int *c,double *v,int edge,int row,int column)
 {
-	if(*r&&*c&&*v){
+	if(r&&c&&v){
 		int i,j;int rc=0,cc=0,vc=0;
 		for(i=0;i<row;i++){
 			for(j=0;j<column;j++){
 				if(adj[i][j]!=0.0){
-					(*r)[rc]=i;
-					(*c)[cc]=j;
-					(*v)[vc]=adj[i][j];
+					r[rc]=i;
+					c[cc]=j;
+					v[vc]=adj[i][j];
 					rc++;cc++;vc++;
 				}
 			}
@@ -37,10 +37,12 @@ int find_double(double **adj,int **r,int **c,double **v,int edge,int row,int col
 	return ERROR;
 }
 /* sort change to already sort array s_D and return the index array */
-int *sort(int *D,int **s_D,int length)
+int *sort(int *D,int *s_D,int length)
 {
 	int *IX=init_matrix(length);
-	if(*s_D&&IX){
+	int *D_copy=init_matrix(length);
+	copy_matrix(D,D_copy,0,length);
+	if(s_D&&IX){
 		int i,j;int min=INT_MAX,minindex=-1;
 		int sortc=0;
 		for(i=0;i<length;i++){
@@ -50,21 +52,25 @@ int *sort(int *D,int **s_D,int length)
 					minindex=j;
 				}
 			}
-			(*s_D)[sortc]=min;
+			s_D[sortc]=min;
 			IX[sortc]=minindex;
 			sortc++;
 			D[minindex]=INT_MAX;
 			min=INT_MAX;minindex=-1;
 		}
+		copy_matrix(D_copy,D,0,length);
+		return IX;
 	}
 	return NULL;
 			
 }
 
-int *sort_double(double *D,double **s_D,int length)
+int *sort_double(double *D,double *s_D,int length)
 {
 	int *IX=init_matrix(length);
-	if(*s_D&&IX){
+	double *D_copy=init_matrix_double(length);
+	copy_matrix_double(D,D_copy,0,length);
+	if(s_D&&IX){
 		int i,j;double min=INT_MAX*1.0;
 		int minindex=-1;
 		int sortc=0;
@@ -75,12 +81,13 @@ int *sort_double(double *D,double **s_D,int length)
 					minindex=j;
 				}
 			}
-			(*s_D)[sortc]=min;
+			s_D[sortc]=min;
 			IX[sortc]=minindex;
 			sortc++;
-			D[minindex]=INT_MAX;
+			D[minindex]=INT_MAX*1.0;
 			min=INT_MAX*1.0;minindex=-1;
 		}
+		copy_matrix_double(D_copy,D,0,length);
 		return IX;
 	}
 	return NULL;

@@ -67,22 +67,23 @@ struct network_double
 };
 /* network.c */
 int *init_matrix(int num);
-void free_matrix(int **matrix);
+void free_matrix(int *matrix);
 double *init_matrix_double(int num);
-void free_matrix_double(double **matrix);
+void free_matrix_double(double *matrix);
 int **init_2_matrix(int row,int column);
-void free_2_matrix(int ***matrix,int row);
+void free_2_matrix(int **matrix,int row);
 double **init_2_matrix_double(int row,int column);
-void free_2_matrix_double(double ***matrix,int row);
+void free_2_matrix_double(double **matrix,int row);
 
-int copy_matrix(int *old,int **new,int start,int end);
-int copy_matrix_double(double *old,double **new,int start,int end); //n
-int copy_2_matrix(int **old,int ***new,int row,int column);
-int copy_2_matrix_double(double **old,double ***new,int row,int column);
-int copy_2_matrix_double_scope(double **old,double ***new,int row1,int column1,int row2,int column2);//
-int copy_2_matrix_double_int_1(int **old,double ***new,int row,int column);
+int copy_matrix(int *old,int *new,int start,int end);
+int copy_matrix_double(double *old,double *new,int start,int end); //n
+int copy_2_matrix(int **old,int **new,int row,int column);
+int copy_2_matrix_double(double **old,double **new,int row,int column);
+int copy_2_matrix_double_scope(double **old,double **new,int row1,int column1,int row2,int column2);//
+int copy_2_matrix_double_int_1(int **old,double **new,int row,int column);
 void print_matrix(int *adj,int length);
 void print_matrix_double(double *adj,int length);
+void print_2_matrix(int **adj,int row,int column);
 void print_2_matrix_double(double **adj,int row,int column);
 
 int **loadmatrix(char *filename,struct network *network);
@@ -92,8 +93,8 @@ double **loadmatrix_double(char *filename,struct network_double *network);
 int size(int ***matrix,int num);
 int length(int ***matrix);
 int *find(int *matrix,int column);
-int fill(int ***adj,int num,int row,int column);
-int fill_double(double ***adj,double num,int row,int column) ;
+int fill(int **adj,int num,int row,int column);
+int fill_double(double **adj,double num,int row,int column);
 int **zeros(int row,int column);
 double **zeros_double(int row,int column);
 int **ones(int row,int column);
@@ -114,13 +115,14 @@ double **matrix_multiply(double **pri,double **beh,int row1,int column1,int row2
 double **matrix_multiply_int_2(double **pri,int **beh,int row1,int column1,int row2,int column2);
 
 /* feclib.c */
-int find_int(int **adj,int **r,int **c,int **v,int edge,int row,int column);
-int find_double(double **adj,int **r,int **c,double **v,int edge,int row,int column);
-int *sort(int *D,int **s_D,int length);
-int *sort_double(double *D,double **s_D,int length);
+int find_int(int **adj,int *r,int *c,int *v,int edge,int row,int column);
+int find_double(double **adj,int *r,int *c,double *v,int edge,int row,int column);
+int *sort(int *D,int *s_D,int length);
+int *sort_double(double *D,double *s_D,int length);
 int sum_1(int *D,int length);
 double sum_1_double(double *D,int length);
 int edge_matrix_double(double **adj,int row,int column);
 int min_double(double *D,double *min,int length);
+
 #endif
 

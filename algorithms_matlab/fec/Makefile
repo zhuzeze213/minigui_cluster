@@ -1,22 +1,22 @@
 OBJS=network.o matlab.o feclib.o fec.o
 CC=gcc
-CFLAGS=-g
+CFLAGS=-c -g
 LIB=-lm
 
 fec:$(OBJS)
 	$(CC) $(OBJS) $(LIB) -o fec
 	
 network.o:network.c mystd.h
-	$(CC) -c -g network.c -o network.o
+	$(CC) $(CFLAGS) network.c -o network.o
 
 matlab.o:matlab.c mystd.h
-	$(CC) -c -g matlab.c -o matlab.o
-
+	$(CC) $(CFLAGS) matlab.c -o matlab.o
+	
 feclib.o:feclib.c mystd.h
-	$(CC) -c -g feclib.c -o feclib.o
+	$(CC) $(CFLAGS) feclib.c -o feclib.o
 
 fec.o:fec.c mystd.h
-	$(CC) -c -g fec.c -o fec.o
-	
+	$(CC) $(CFLAGS) fec.c -o fec.o
+
 clean:
-	rm -rf *.o
+	rm -rf *.o fec

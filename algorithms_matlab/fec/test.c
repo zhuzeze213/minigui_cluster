@@ -26,12 +26,16 @@ int main(void)
 	print_matrix(co,edge);
 	print_matrix_double(v,edge);
 	
-	double *s_D=init_matrix_double(edge);
+	double *A=init_matrix_double(3);
+	A[0]=0.1;A[1]=0.05;A[2]=0.15;
+	double *s_D=init_matrix_double(3);
 	int *index;
+	index=sort_double(A,&s_D,3);
+	print_matrix_double(s_D,3);
+	print_matrix(index,3);
+	print_matrix_double(A,3);
+	
 	int node=network.node;
-/*	index=sort_double(map[0],&s_D,node);
-	print_matrix_double(s_D,node);
-	print_matrix(index,node);*/
 	
 	double sum=sum_1_double(map[0],node);
 	printf("%f \n",sum);
