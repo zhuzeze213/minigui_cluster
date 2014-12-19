@@ -275,6 +275,7 @@ int main(int argc,char *argv[])
 	struct network_double network;
 	if(loadmatrix_double(argv[1],&network)){
 		fec(network.adj,network.row,network.column,network.edge);
+		free_2_matrix_double(network.adj,network.row);
 	}
 	return 0;
 }

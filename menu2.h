@@ -51,23 +51,23 @@ static HMENU optimization_menu(void)
 	mii.typedata = (DWORD)"kernighan-lin";
 	InsertMenuItem(hmnu, 0, TRUE, &mii);
 
-        mii.type = MFT_STRING;
-        mii.state = 0;
-        mii.id = IDM_FAST_NEWMAN;
-        mii.typedata = (DWORD)"fast-newman";
-        InsertMenuItem(hmnu, 1, TRUE, &mii);
+    mii.type = MFT_STRING;
+    mii.state = 0;
+    mii.id = IDM_FAST_NEWMAN;
+    mii.typedata = (DWORD)"fast-newman";
+    InsertMenuItem(hmnu, 1, TRUE, &mii);
 
-        mii.type = MFT_STRING;
-        mii.state = 0;
-        mii.id = IDM_FAST_MODULARITY;
-        mii.typedata = (DWORD)"fast-modularity";
-        InsertMenuItem(hmnu, 2, TRUE, &mii);
+    mii.type = MFT_STRING;
+    mii.state = 0;
+    mii.id = IDM_FAST_MODULARITY;
+    mii.typedata = (DWORD)"fast-modularity";
+    InsertMenuItem(hmnu, 2, TRUE, &mii);
 
-        mii.type = MFT_STRING;
-        mii.state = 0;
-        mii.id = IDM_GUIMERA_AMARAL;
-        mii.typedata = (DWORD)"guimera-amaral";
-        InsertMenuItem(hmnu, 3, TRUE, &mii);
+    mii.type = MFT_STRING;
+    mii.state = 0;
+    mii.id = IDM_GUIMERA_AMARAL;
+    mii.typedata = (DWORD)"guimera-amaral";
+    InsertMenuItem(hmnu, 3, TRUE, &mii);
 
 	
 	mii.type = MFT_SEPARATOR;
@@ -75,7 +75,19 @@ static HMENU optimization_menu(void)
 	mii.id = 0;
 	mii.typedata = 0;
 	InsertMenuItem(hmnu, 4, TRUE, &mii);
-
+	
+	mii.type = MFT_STRING;
+    mii.state = 0;
+    mii.id = IDM_CM;
+    mii.typedata = (DWORD)"cm";
+    InsertMenuItem(hmnu, 5, TRUE, &mii);
+	
+	mii.type = MFT_STRING;
+    mii.state = 0;
+    mii.id = IDM_SA;
+    mii.typedata = (DWORD)"sa";
+    InsertMenuItem(hmnu, 6, TRUE, &mii);	
+	
 	return hmnu;
 }
 
@@ -112,6 +124,12 @@ static HMENU heuristic_menu(void)
         mii.id = IDM_CPM;
         mii.typedata = (DWORD)"cpm";
         InsertMenuItem(hmnu, 3, TRUE, &mii);
+		
+		mii.type = MFT_STRING;
+        mii.state = 0;
+        mii.id = IDM_FCM;
+        mii.typedata = (DWORD)"fcm";
+        InsertMenuItem(hmnu, 4, TRUE, &mii);
 
 	return hmnu;
 }
