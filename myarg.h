@@ -1,0 +1,3 @@
+#define FILE_SIZE 20
+#define BUFFER_SIZE 4096
+#define LINE_SIZE 20

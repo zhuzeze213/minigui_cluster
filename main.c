@@ -1,24 +1,105 @@
 #include <stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<unistd.h>
+#include<fcntl.h>
 
 #include<minigui/common.h>
 #include<minigui/minigui.h>
 #include<minigui/gdi.h>
 #include<minigui/window.h>
 #include<minigui/control.h>
-
+#include "myarg.h"
 #include "menu.h"
-#include "menu2.h"
 #include "notebook.h"
+
+int algorithm=0,networks=0;
+char filename[FILE_SIZE];
+static int step = 12;
+
 static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
 {
 	HDC hdc;
+	static int iStart = 0;
+    	static int iStartPos = 0;
 	switch(message){
+		case MSG_CREATE:
+            	SetScrollRange (hWnd, SB_VERT, 0, 20*12);
+		SetScrollRange (hWnd, SB_HORZ, 0, 20*12);
+		EnableScrollBar (hWnd, SB_VERT, TRUE);
+            	EnableScrollBar (hWnd, SB_HORZ, TRUE);
+		ShowScrollBar(hWnd, SB_VERT, TRUE);
+                ShowScrollBar(hWnd, SB_HORZ, TRUE); 
+		return 0;
+		
+		case MSG_HSCROLL:
+            	{
+        	SCROLLINFO hscroll;
+            	if (wParam == SB_LINERIGHT||wParam==SB_PAGERIGHT) {
+                	hscroll.fMask = SIF_ALL;
+                	GetScrollInfo(hWnd, SB_VERT, &hscroll);
+                	if (hscroll.nPos + hscroll.nPage >= hscroll.nMax)
+                    	break;
+                	if (iStart < step) {
+                    		iStart ++;
+                    		ScrollWindow (hWnd, -20, 0, NULL, NULL);
+                	}
+           	}
+            	else if (wParam == SB_LINELEFT||wParam==SB_PAGELEFT) {
+                	if (iStart > 0) {
+                    		iStart --;
+                    		ScrollWindow (hWnd, 20, 0, NULL, NULL);
+                	}
+            	}
+            	SetScrollPos (hWnd, SB_HORZ, iStart*20);
+		return 0;
+        	}
+
+		case MSG_VSCROLL:
+		{
+        	SCROLLINFO vscroll;
+            	if (wParam == SB_LINEDOWN||wParam==SB_PAGEDOWN) {
+                	vscroll.fMask = SIF_ALL;
+                	GetScrollInfo(hWnd, SB_VERT, &vscroll);
+                	if (vscroll.nPos + vscroll.nPage >= vscroll.nMax)
+                    	break;
+                	if (iStart < step) {
+                    		iStart ++;
+                    		ScrollWindow (hWnd, 0, -20, NULL, NULL);
+                	}
+           	}
+            	else if (wParam == SB_LINEUP||wParam==SB_PAGEUP) {
+                	if (iStart > 0) {
+                    		iStart --;
+                    		ScrollWindow (hWnd, 0, 20, NULL, NULL);
+                	}
+            	}
+            	SetScrollPos (hWnd, SB_VERT, iStart*20);
+		return 0;
+        	}
+		
 		case MSG_PAINT:
-		hdc=BeginPaint(hWnd);
-		TextOut(hdc,0,0,"Welcome to use \"Comunity detection algorithms platform!\"");
-		EndPaint(hWnd,hdc);
+		if(!algorithm){
+			hdc=BeginPaint(hWnd);
+			TextOut(hdc,0,0,"Welcome to use \"Comunity detection algorithms platform!\"");
+			EndPaint(hWnd,hdc);
+		}
+		else if(algorithm&&!networks){
+			hdc=BeginPaint(hWnd);
+			TextOut(hdc,0,0,"you have choosen the algorithm,please choose the network!");
+			EndPaint(hWnd,hdc);
+		}
+		else{
+			int row=0,i=1;
+			hdc=BeginPaint(hWnd);
+			TextOut(hdc,0,0,"result!\n");
+			FILE *fp=fopen(filename,"r");
+			char buffer[BUFFER_SIZE];
+			while(fgets(buffer,BUFFER_SIZE,fp))
+				TextOut(hdc,0,row+=LINE_SIZE*i,buffer);
+			EndPaint(hWnd,hdc);
+		}
+
 		return 0;
 
 		case MSG_CLOSE:
@@ -37,7 +118,21 @@ static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
 */
 		case MSG_COMMAND:
 		switch (wParam) {
-			case IDM_KERNIGHAN_LIN:
+			case IDM_FCM:
+			algorithm=1;
+			strcpy(filename,"fcm");
+			InvalidateRect (hWnd, NULL, TRUE);
+			break;
+
+			case IDM_KARATE:
+			networks=1;
+			InvalidateRect(hWnd,NULL,TRUE);
+			break;
+
+			case IDM_RIGHT_BUTTON+5: //fresh
+			algorithm=networks=0;
+			InvalidateRect(hWnd,NULL,TRUE);
+			
 			break;
 		}
 		return 0;
@@ -55,7 +150,7 @@ static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
 	return DefaultMainWinProc(hWnd,message,wParam,lParam);
 }
 
-int MiniGUIMain(int argc,const char *argv[])
+static int MiniGUIMain(int argc,const char *argv[])
 {
 	MSG Msg;
 	HWND hMainWnd;
@@ -69,7 +164,7 @@ int MiniGUIMain(int argc,const char *argv[])
 	}
 	#endif
 
-	CreateInfo.dwStyle=WS_VISIBLE|WS_BORDER|WS_CAPTION|WS_MINIMIZEBOX;
+	CreateInfo.dwStyle=WS_VISIBLE|WS_BORDER|WS_CAPTION|WS_MINIMIZEBOX|WS_HSCROLL|WS_VSCROLL;
 	CreateInfo.dwExStyle=WS_EX_NONE;
 	CreateInfo.spCaption="Community Detection v0.1";
 	CreateInfo.hMenu=createmenu();

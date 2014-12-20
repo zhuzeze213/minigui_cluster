@@ -4,6 +4,7 @@
 #define IDM_1 100
 #define IDM_2 101
 #define IDM_3 102
+#define IDM_4 103
 
 #define IDM_OPTIMIZATION 0
 #define IDM_AVERAGE_CUT 1
@@ -32,6 +33,16 @@
 #define IDM_WALKTRAP 18
 #define IDM_HALL 19
 
+#define IDM_NETWORKS 200
+#define IDM_KARATE 201
+#define IDM_DOLPHINS 202
+#define IDM_FOOTBALL 203
+#define IDM_ADJNOUN 204
+#define IDM_LESMIS 205
+#define IDM_JAZZ 206
+#define IDM_GENERATED_NETWORKS 207
+#define IDM_MY_NETWORKS 208
+
 #define IDM_RIGHT_BUTTON 50
-#define NUM_RIGHT_BUTTON 6
+#define NUM_RIGHT_BUTTON 7
 #endif

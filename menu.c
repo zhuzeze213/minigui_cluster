@@ -16,7 +16,7 @@ HMENU right_button_menu(HWND hWnd,int x,int y)
 	HMENU hNewMenu;
 	MENUITEMINFO mii;
 	HMENU hMenuFloat;
-	char *msg[] = {"Import algorithm","Import data","Evaluation result","Source code","Output data","Property"};
+	char *msg[] = {"Import algorithm","Import data","Evaluation result","Source code","Output data","fresh","Property"};
 	memset (&mii, 0, sizeof(MENUITEMINFO));
 	mii.type = MFT_STRING;
 	mii.id = 0;
@@ -165,6 +165,71 @@ static HMENU others_menu(void)
 	return hmnu;
 }
 
+static HMENU networks_menu(void)
+{
+        HMENU hmnu;
+        MENUITEMINFO mii;
+        memset (&mii, 0, sizeof(MENUITEMINFO));
+        mii.type = MFT_STRING;
+        mii.id = IDM_NETWORKS;
+        mii.typedata =(DWORD)"networks";
+        hmnu = CreatePopupMenu (&mii);
+
+        mii.type = MFT_STRING;
+        mii.state = 0;
+        mii.id = IDM_KARATE;
+        mii.typedata = (DWORD)"karate";
+        InsertMenuItem(hmnu, 0, TRUE, &mii);
+
+        mii.type = MFT_STRING;
+        mii.state = 0;
+        mii.id = IDM_DOLPHINS;
+        mii.typedata = (DWORD)"dolphins";
+        InsertMenuItem(hmnu, 1, TRUE, &mii);
+
+        mii.type = MFT_STRING;
+        mii.state = 0;
+        mii.id = IDM_FOOTBALL;
+        mii.typedata = (DWORD)"football";
+        InsertMenuItem(hmnu, 2, TRUE, &mii);
+
+        mii.type = MFT_STRING;
+        mii.state = 0;
+        mii.id = IDM_ADJNOUN;
+        mii.typedata = (DWORD)"adjnoun";
+        InsertMenuItem(hmnu, 3, TRUE, &mii);
+		
+	mii.type = MFT_STRING;
+        mii.state = 0;
+        mii.id = IDM_LESMIS;
+        mii.typedata = (DWORD)"lesmis";
+        InsertMenuItem(hmnu, 4, TRUE, &mii);
+
+	mii.type = MFT_STRING;
+        mii.state = 0;
+        mii.id = IDM_JAZZ;
+        mii.typedata = (DWORD)"jazz";
+        InsertMenuItem(hmnu, 5, TRUE, &mii);
+
+	mii.type = MFT_SEPARATOR;
+	mii.state = 0;
+	mii.id = 0;
+	mii.typedata = 0;
+	InsertMenuItem(hmnu, 6, TRUE, &mii);
+
+	mii.type = MFT_STRING;
+        mii.state = 0;
+        mii.id = IDM_GENERATED_NETWORKS;
+        mii.typedata = (DWORD)"generated networks";
+        InsertMenuItem(hmnu, 7, TRUE, &mii);
+
+	mii.type = MFT_STRING;
+        mii.state = 0;
+        mii.id = IDM_MY_NETWORKS;
+        mii.typedata = (DWORD)"my networks";
+        InsertMenuItem(hmnu, 8, TRUE, &mii);
+	return hmnu;
+}
 HMENU createmenu(void)
 {
 	HMENU hmnu;
@@ -179,7 +244,7 @@ HMENU createmenu(void)
 
         mii.type = MFT_STRING;
         mii.id = IDM_2;
-        mii.typedata =(DWORD)"heuristic";
+        mii.typedata =(DWORD)"Heuristic";
         mii.hsubmenu =heuristic_menu();
         InsertMenuItem(hmnu, 1, TRUE, &mii);
 
@@ -188,6 +253,12 @@ HMENU createmenu(void)
         mii.typedata =(DWORD)"Others";
         mii.hsubmenu =others_menu();
         InsertMenuItem(hmnu, 2, TRUE, &mii);
+
+        mii.type = MFT_STRING;
+        mii.id = IDM_4;
+        mii.typedata =(DWORD)"Networks";
+        mii.hsubmenu =networks_menu();
+        InsertMenuItem(hmnu, 3, TRUE, &mii);
 
 	return hmnu;
 }
