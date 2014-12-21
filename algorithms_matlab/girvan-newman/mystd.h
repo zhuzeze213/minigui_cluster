@@ -103,6 +103,7 @@ double **rand_matlab(int row,int column);
 int *sum(int **adj,int num,int row,int column);
 double *sum_double(double **adj,int num,int row,int column);
 int *row_num(int **adj,int num,int row,int column);
+double *row_num_double(double **adj,int num,int row,int column);//!
 int *column_num(int **adj,int num,int row,int column);
 int **transposition(int **matrix,int row,int column);
 double **transposition_double(double **matrix,int row,int column);
@@ -118,10 +119,11 @@ int find_int(int **adj,int *r,int *c,int *v,int edge,int row,int column);
 int find_double(double **adj,int *r,int *c,double *v,int edge,int row,int column);
 int *sort(int *D,int *s_D,int length);
 int *sort_double(double *D,double *s_D,int length);
-int sum_1(int *D,int length);
+int sum_1(int *D,int length);//!
 double sum_1_double(double *D,int length);
 int edge_matrix_double(double **adj,int row,int column);
 int min_double(double *D,double *min,int length);
+int equal_int_1(int *a,double *b,int length);//!
 
 #endif
 

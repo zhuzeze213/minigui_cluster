@@ -208,6 +208,19 @@ int *row_num(int **adj,int num,int row,int column)
 	return NULL;
 }
 
+double *row_num_double(double **adj,int num,int row,int column)
+{
+	if(num>=row)
+		return NULL;
+	double *ret=init_matrix_double(column);
+	if(ret){
+		int i;
+		for(i=0;i<column;i++)
+			ret[i]=adj[num][i];
+		return ret;
+	}
+	return NULL;
+}
 /*return the column you want */
 int *column_num(int **adj,int num,int row,int column)
 {
@@ -607,6 +620,17 @@ int min_double(double *D,double *min,int length)
 	}
 	return minindex;
 	
+}
+
+int equal_int_1(int *a,double *b,int length)
+{
+	int i;
+	for(i=0;i<length;i++){
+		double tmp=a[i]*1.0;
+		if(tmp!=b[i])
+			return 0;
+	}
+	return 1;
 }
 
 	
