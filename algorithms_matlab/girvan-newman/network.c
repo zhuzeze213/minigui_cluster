@@ -159,20 +159,7 @@ int init_network(struct network *network,int row,int column,int node,int edge,BO
 		return ERROR; 
 }
 
-int init_network_double(struct network_double *network,int row,int column,int node,int edge,BOOL direct,BOOL power)
-{
-        if(network){
-                network->row=row;
-                network->column=column;
-                network->node=node;
-                network->edge=edge;
-                network->direct=direct;
-                network->power=power;
-                return DONE;
-        }
-        else
-                return ERROR;
-}
+
 
 int copy_matrix(int *old,int *new,int start,int end,int start2)
 {
@@ -199,57 +186,7 @@ int copy_matrix_double(double *old,double *new,int start,int end,int start2)
 	}
 	return ERROR;
 }
-int copy_2_matrix(int **old,int **new,int row,int column)
-{
-	if(old&&new){
-		int i,j;
-		for(i=0;i<row;i++)
-			for(j=0;j<column;j++)
-				new[i][j]=old[i][j];
-		return DONE;
-	}
-	return ERROR;
-}
 
-int copy_2_matrix_double(double **old,double **new,int row,int column)
-{
-	if(old&&new){
-		int i,j;
-		for(i=0;i<row;i++)
-			for(j=0;j<column;j++)
-				new[i][j]=old[i][j];
-		return DONE;
-	}
-	return ERROR;
-}
-
-int copy_2_matrix_double_scope(double **old,double **new,int sx,int sy,int ex,int ey,int sx2,int sy2)
-{
-	if(old&&new){
-		int i,j,x=sx2,y=sy2;
-		for(i=sx;i<ex;i++){
-			for(j=sy;j<ey;j++){
-				new[x][y]=old[i][j];
-				y++;
-			}
-			x++;
-			y=sy2;
-		}
-		return DONE;
-	}
-	return ERROR;
-}
-int copy_2_matrix_double_int_1(int **old,double **new,int row,int column)
-{
-	if(old&&new){
-		int i,j;
-		for(i=0;i<row;i++)
-			for(j=0;j<column;j++)
-				new[i][j]=old[i][j];
-		return DONE;
-	}
-	return ERROR;
-}
 /* int ** loadmatrix(char *filename) return the two demension matrix from the file 
 it only use row=column matrix*/
 int **loadmatrix(char *filename,struct network *network)
@@ -316,68 +253,3 @@ int **loadmatrix(char *filename,struct network *network)
 	return network->adj;
 }
 
-double **loadmatrix_double(char *filename,struct network_double *network)
-{
-	if(!filename)
-		return NULL;
-	FILE *fp;
-	if(fp=fopen(filename,"r"))
-		printf("read the %s\n",filename);
-	else{
-		printf("read error\n");
-		return NULL;
-	}
-	char tmp[BUFFERSIZE];
-	int node=0;
-	while(fgets(tmp,BUFFERSIZE,fp))
-		node++;
-	printf("almost %d nodes\n",node);
-	fclose(fp);	
-	double **adj=init_2_matrix_double(node,node);
-	network->adj=init_2_matrix_double(node,node);
-	
-	
-	fp=fopen(filename,"r");
-	int c;
-	int i=0,j=0;
-	int count=node*node;
-	while(count){
-		c=fgetc(fp);	
-		if(c=='0'){
-			adj[i][j]=0.0;
-			j++;
-			count--;
-		}
-		else if(c=='1'){
-			adj[i][j]=1.0;
-			j++;
-			count--;
-		}
-		else if(c=='\n'){
-			i++;
-			j=0;
-			
-		}
-	}
-	fclose(fp);
-	if(copy_2_matrix_double(adj,network->adj,node,node)==ERROR)
-		return NULL;
-	
-	int x,y;int edges=0;
-	for(x=0;x<node;x++){
-		for(y=0;y<node;y++){
-			if(adj[x][y]!=0.0)
-				edges++;	
-		}
-	}
-	edges/=2;
-	printf("almost %d edges\n",edges);
-	if(init_network_double(network,node,node,node,edges,NO_DIRECT,NO_POWER)==ERROR)
-		return NULL;
-	for(x=0;x<node;x++)
-		free(adj[x]);
-	free(adj);
-	return network->adj;
-}
-
-		
