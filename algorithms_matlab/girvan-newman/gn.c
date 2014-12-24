@@ -13,6 +13,12 @@ void P(int **community,int count,int length)
 			}
 		}
 	}
+	for(i=0;i<count;i++){
+		for(j=length-1;j>=0;j--){
+			if(community[i][j]==community[i][j-1])
+				community[i][j]=-1;
+		}
+	}
 
 }
 double Calculate_Q(int **football,int **best_community,int Nnode,int col,int edges)
@@ -223,10 +229,10 @@ double * G_N4(int **edges_array,int **tri_edges,int *number_per_row,int *tri_num
 	}
 	//if(a&&co==1){print_2_matrix_double(edge_dependency,edges/2,3);a--;}
 	//if(a&&co==1){print_matrix_double(row_num_double(edge_dependency,*position,edges/2,3),3);a--;}
-	//free_2_matrix_double(edge_dependency,edges/2);
+	free_2_matrix_double(edge_dependency,edges/2);
 	
-	return row_num_double(edge_dependency,*position,edges/2,3);
-	
+	//return row_num_double(edge_dependency,*position,edges/2,3);
+	return temp;
 }
 
 double GN(int **adj,int **best_community,int count,int row2,int edge)
@@ -281,19 +287,15 @@ double GN(int **adj,int **best_community,int count,int row2,int edge)
 /* [temp,pos1,pos2,pos] = G_N4(edges_array,tri_edges,number_row,number_tri_row,vertices, edges*2);*/ 
 		int pos,pos1,pos2;
 		double *temp=G_N4(edges_array,tri_edges,number_row,number_tri_row,vertices, edges*2,&pos1,&pos2,&pos);
-		//if(co==0)printf("%d %d %d\n",pos1,pos2,pos);
-		//print_matrix_double(temp,3);
+
 		int i;
 		for(i=0;i<3;i++)
 			deleted_edge[deleted_edge_number][i]=temp[i];
 		
 		
 		matrix[(int)temp[0]][(int)temp[1]]=0;
-		matrix[(int)temp[1]][(int)temp[0]]=0;//if(a){printf("%d %d\n",(int)temp[0],(int)temp[1]);a=0;}
+		matrix[(int)temp[1]][(int)temp[0]]=0;
 		
-		//tri_edges[pos][0]=-1;tri_edges[pos][1]=-1;
-		//edges_array[pos1][0]=-1;edges_array[pos1][1]=-1;
-		//edges_array[pos2-1][0]=-1;edges_array[pos2-1][1]=-1;
 		int **c1=init_2_matrix(edges*2,2);
 		int **c2=init_2_matrix(edges,2);
 		copy_2_matrix(edges_array,c1,edges*2,2);
@@ -353,6 +355,16 @@ double GN(int **adj,int **best_community,int count,int row2,int edge)
 		deleted_edge_number++;
 		edges--;
 	}
+
+	free_2_matrix_double(deleted_edge,edges);
+	free_2_matrix(community,count);
+	free_2_matrix(best_matrix,vertices);
+	free_matrix(community_number);
+	free_2_matrix(edges_array,edges*2);
+	free_2_matrix(tri_edges,edges);
+	free_matrix(number_tri_row);
+	free_matrix(number_row);
+	free_2_matrix(matrix,row2);
 	return q_max;
 }
 
@@ -365,6 +377,7 @@ int main(int argc,char *argv[])
 		double Q=GN(network.adj,best_community,count,network.row,network.edge);
 		printf("Q:%f\n",Q);
 		free_2_matrix(network.adj,network.row);
+		free_2_matrix(best_community,count);
 	}
 	return 0;
 }
