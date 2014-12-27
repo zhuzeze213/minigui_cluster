@@ -59,7 +59,7 @@ double Calculate_Q(int **football,int **best_community,int Nnode,int col,int edg
 	return value_Q;
 }
 
-double cm(int **adj,int count,int row,int edges)
+double sa(int **adj,int count,int row,int edges)
 {
 	int **best_community=init_2_matrix(count,row);
 	fill(best_community,-1,count,row);
@@ -79,8 +79,8 @@ double cm(int **adj,int count,int row,int edges)
 	//print_2_matrix(community,count,row);
 	double Q_max=Calculate_Q(adj,community,count,row,edges);
 	
-	int loop_count=row*1000;
-	for(i=0;i<loop_count;i++){
+	double r=0.9,T=1000000.0,T_min=1.0;
+	while(T>T_min){
 		int from=rand()%count;
 		int dest=rand()%count;
 		int fromindex=rand()%(clu_count[from]+1);
@@ -98,8 +98,18 @@ double cm(int **adj,int count,int row,int edges)
 				clu_count[dest]++;
 				copy_2_matrix(community,best_community,count,row);
 			}
-			else
-				copy_2_matrix(best_community,community,count,row);
+			else{
+				if(exp((T*r-T)/T)>rand()*1.0/INT_MAX){
+					printf("%f %f\n",T,exp((T*r-T)/T));
+					Q_max=Q_tmp;
+					clu_count[from]--;
+					clu_count[dest]++;
+					copy_2_matrix(community,best_community,count,row);
+				}
+				else
+					copy_2_matrix(best_community,community,count,row);
+			}
+			T*=r;
 		}
 	}
 	print_2_matrix(best_community,count,row);
@@ -114,7 +124,7 @@ int main(int argc,char *argv[])
 	struct network network;
 	if(loadmatrix(argv[1],&network)){
 		int count=atoi(argv[2]);
-		double Q=cm(network.adj,count,network.row,network.edge);
+		double Q=sa(network.adj,count,network.row,network.edge);
 		printf("Q:%f\n",Q);
 		free_2_matrix(network.adj,network.row);
 	}
