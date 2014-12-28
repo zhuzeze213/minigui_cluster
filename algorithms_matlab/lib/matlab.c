@@ -304,6 +304,43 @@ int **create_diag(int *v,int n,int pos)
 		return NULL;
 }
 
+double **create_diag_double(double *v,int n,int pos)
+{
+	if(pos>=0&&v){
+		int column=pos+n;
+		int row=pos+n;
+		double **adj=init_2_matrix_double(row,column);
+		int i=0,j=0;	
+		i=0;j=pos;
+		if(adj){
+			for(i=0;i<n;i++){
+				adj[i][j]=v[i];
+				j++;
+			}
+			return adj;
+		}
+		else return NULL;
+	}	
+	else if(pos<0&&v){
+		int column=-pos+n;
+		int row=-pos+n;
+		double **adj;
+		int i=0,j=0;
+		adj=init_2_matrix_double(row,column);
+		i=-pos;j=0;
+		if(adj){
+			for(j=0;j<n;j++){
+				adj[i][j]=v[j];
+				i++;
+			}
+			return adj;
+		}
+		else return NULL;
+	}
+	else
+		return NULL;	
+}
+
 double **copy_double(double *old,int copy,int length)
 {
 	double **adj;
@@ -444,6 +481,24 @@ double **matrix_operate_double_int_2(double **pri,int **beh,char ope,int row,int
 	}	
 		return adj;	
 }
+
+int **matrix_multiply_int(int **pri,int **beh,int row1,int column1,int row2,int column2)
+{
+	if(column1!=row2) return NULL;
+	int **adj=init_2_matrix_double(row1,column2);
+	if(adj){
+		int i,j,k;
+		for(i=0;i<row1;i++){
+			for(j=0;j<column2;j++){
+				for(k=0;k<row2;k++)
+					adj[i][j]+=pri[i][k]*beh[k][j];
+			}
+		}
+		return adj;
+	}
+	return NULL;
+}
+
 double **matrix_multiply(double **pri,double **beh,int row1,int column1,int row2,int column2)
 {
 	if(column1!=row2) return NULL;
@@ -643,6 +698,106 @@ double trace(double **adj,int row)
 		
 	return sum;
 }
+
+int *unique(int *adj,int length,int *r_length)
+{
+	if(!adj) return NULL;
+	int *r_adj=init_matrix(length);
+	r_adj[0]=adj[0];
+	*r_length=1;
+	int i,j;
+	for(i=1;i<length;i++){
+		int symbol=0;
+		for(j=0;j<*r_length;j++){
+			if(r_adj[j]==adj[i])
+				symbol=1;
+		}
+		if(!symbol){
+			r_adj[*r_length]=adj[i];
+			symbol=0;
+			*r_length++;
+		}
+	}
+	return r_adj;
+}
+
+int **inv(int **adj,int row,int column)
+{
+	int **ans=init_2_matrix(row,column);
+	int n=row*column;
+	if(n==1)
+	{
+		ans[0][0] = 1;
+		return ans;
+	}
+	int i,j,k,t;
+	int **temp=init_2_matrix(row,column);
+	for(i=0;i<n;i++)
+	{
+		for(j=0;j<n;j++)
+		{
+			for(k=0;k<n-1;k++)
+			{
+				for(t=0;t<n-1;t++)
+				{
+					temp[k][t] = adj[k>=i?k+1:k][t>=j?t+1:t];
+				}
+			}
+
+		
+			ans[j][i]  =  getA(temp,n-1,row,column);
+			if((i+j)%2 == 1)
+			{
+				ans[j][i] = - ans[j][i];
+			}
+		}
+	}
+	return ans;
+}
+
+static int getA(int **arcs,int n,int row,int column)//按第一行展开计算|A|
+{
+	if(n==1)
+	{
+		return arcs[0][0];
+	}
+	int ans = 0;
+	int **temp=init_2_matrix(row,column);
+	int i,j,k;
+	for(i=0;i<n;i++)
+	{
+		for(j=0;j<n-1;j++)
+		{
+			for(k=0;k<n-1;k++)
+			{
+				temp[j][k] = arcs[j+1][(k>=i)?k+1:k];
+				
+			}
+		}
+		int t = getA(temp,n-1,row,column);
+		if(i%2==0)
+		{
+			ans += arcs[0][i]*t;
+		}
+		else
+		{
+			ans -=  arcs[0][i]*t;
+		}
+	}
+	return ans;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	
