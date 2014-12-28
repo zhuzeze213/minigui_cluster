@@ -1,4 +1,4 @@
-#include "mystd.h"
+#include "../include/mystd.h"
 int a=1;int co=0;
 
 void P(int **community,int count,int length)

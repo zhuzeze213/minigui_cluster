@@ -1,4 +1,4 @@
-#include "mystd.h"
+#include "../include/mystd.h"
 
 double **get_community_matrix(int **adj,int *com,int row)
 {

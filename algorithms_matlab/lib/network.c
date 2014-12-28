@@ -1,4 +1,4 @@
-#include "mystd.h"
+#include "../include/mystd.h"
 
 int *init_matrix(int num)
 {

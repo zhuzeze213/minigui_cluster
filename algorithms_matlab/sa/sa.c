@@ -1,4 +1,4 @@
-#include "mystd.h"
+#include "../include/mystd.h"
 double Calculate_Q(int **football,int **best_community,int Nnode,int col,int edges)
 {
 	double value_Q=0.0;

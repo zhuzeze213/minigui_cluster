@@ -1,4 +1,4 @@
-#include "mystd.h"
+#include "../include/mystd.h"
 
 /*  function  col = find_first_col(H,v) */
 int find_first_col(int **H,int v,int length)
