@@ -805,7 +805,15 @@ int **inv(int **adj,int row,int column)
 	return ans;
 }
 
-
+int find_num(int *adj,int length,int num)
+{
+	int i;
+	for(i=0;i<length;i++){
+		if(adj[i]==num]
+			return i;
+	}
+	return -1;
+}
 
 
 

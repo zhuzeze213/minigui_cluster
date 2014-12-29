@@ -64,8 +64,107 @@ double kl(int **adj,int *com,int *cur_com,int row)
 		for(i=0;i<row;i++){
 			double loop_best_Q=Q;
 			for(j=i+1;j<row;j++){
-				
-	
-	
+				if(adj[i][j]!=0&&cur_com[i]!=cur_com[j]){
+					int *com_tmp=init_matrix(row);
+					copy_matrix(cur_com,com_tmp,0,row,0);
+					com_tmp[i]=com_tmp[j];
+					int k=0;
+					int length;
+					unique(com_tmp,row,&length);
+					while(k<length){
+						if(!find_num(com_tmp,row,k)){
+							int l;
+							for(l=0;l<row;l++){
+								if(com_tmp[l]>k)
+									com_tmp[l]--;
+							}
+						}
+						else
+							k++;
+					}
+					/* 1 loop */
+					H=get_indicator_matrix(adj,com_tmp,row);
+					double tmp_Q=compute_stability(M,H,pi,PI,ts,row);
+					int best_pair[2];
+					if(tmp_Q>loop_best_Q){
+						loop_best_Q=tmp_Q;
+						best_pair[0]=i;
+						best_pair[1]=j;
+					}
+					copy_matrix(cur_com,com_tmp,0,row,0);
+					com_tmp[j]=com_tmp[i];
+					k=0;
+					unique(com_tmp,row,&length);
+					while(k<length){
+						if(!find_num(com_tmp,row,k)){
+							int l;
+							for(l=0;l<row;l++){
+								if(com_tmp[l]>k)
+									com_tmp[l]--;
+							}
+						}
+						else
+							k++;
+					}
+					/* 1 loop */
+					H=get_indicator_matrix(adj,com_tmp,row);
+					tmp_Q=compute_stability(M,H,pi,PI,ts,row);
+					if(tmp_Q>loop_best_Q){
+						loop_best_Q=tmp_Q;
+						best_pair[0]=j;
+						best_pair[1]=i;
+					}
+				}
+			}
+			
+			if(loop_best_Q>Q){
+				Q=loop_best_Q;
+				cur_com[best_pair[0]]=cur_com[best_pair[1]];
+				int k=0;
+				int length=0;
+				unique(cur_com,row,&length);
+				while(k<length){
+					if(!find_num(com_tmp,row,k)){
+						int l;
+						for(l=0;l<row;l++){
+							if(cur_com[l]>k)
+								cur_com[l]--;
+						}
+					}
+					else
+						k++;
+				}
+				if(nb_passes>0){
+					nb_passes--;
+					change=1;
+				}
+			}
+		}
+	}
+	return Q;			
 	
 }
+
+int main(int argc,char *argv[])
+{
+	struct network network;
+	if(loadmatrix(argv[1],&network)){
+		int *com=init_matrix(network.node);
+		for(i=0;i<network.node;i++)
+			com[i]=i;
+		int *cur_com=init_matrix(network.node);
+		double Q=kl(network.adj,com,cur_com,network.node);
+		print_matrix(com,network.node);
+		printf("Q:%f\n",Q);
+		free_matrix(com);
+		free_matrix(cur_com);
+		free_2_matrix(network.adj,network.row);
+		
+	}
+	return 0;
+}
+
+
+
+
+

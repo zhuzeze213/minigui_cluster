@@ -130,5 +130,6 @@ int min_double(double *D,double *min,int length);
 double trace(double **adj,int row);
 int *unique(int *adj,int length,int *r_length);
 int **inv(int **adj,int row,int column);
+int find_num(int *adj,int length,int num);
 #endif
 
