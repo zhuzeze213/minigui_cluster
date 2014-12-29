@@ -485,7 +485,7 @@ double **matrix_operate_double_int_2(double **pri,int **beh,char ope,int row,int
 int **matrix_multiply_int(int **pri,int **beh,int row1,int column1,int row2,int column2)
 {
 	if(column1!=row2) return NULL;
-	int **adj=init_2_matrix_double(row1,column2);
+	int **adj=init_2_matrix(row1,column2);
 	if(adj){
 		int i,j,k;
 		for(i=0;i<row1;i++){
@@ -515,6 +515,23 @@ double **matrix_multiply(double **pri,double **beh,int row1,int column1,int row2
 	}
 	return NULL;
 }	
+
+double **matrix_multiply_int_1(int **pri,double **beh,int row1,int column1,int row2,int column2)
+{
+		if(column1!=row2) return NULL;
+        double **adj=init_2_matrix_double(row1,column2);
+        if(adj){
+                int i,j,k;
+                for(i=0;i<row1;i++){
+                        for(j=0;j<column2;j++){
+                                for(k=0;k<row2;k++)
+                                        adj[i][j]+=pri[i][k]*beh[k][j];
+                        }
+                }
+                return adj;
+        }
+        return NULL;
+}
 	
 double **matrix_multiply_int_2(double **pri,int **beh,int row1,int column1,int row2,int column2)
 {
@@ -706,56 +723,23 @@ int *unique(int *adj,int length,int *r_length)
 	r_adj[0]=adj[0];
 	*r_length=1;
 	int i,j;
+	int symbol=0;
 	for(i=1;i<length;i++){
-		int symbol=0;
-		for(j=0;j<*r_length;j++){
+		symbol=0;
+		for(j=0;j<(*r_length);j++){
 			if(r_adj[j]==adj[i])
 				symbol=1;
+			
 		}
 		if(!symbol){
 			r_adj[*r_length]=adj[i];
-			symbol=0;
-			*r_length++;
+			(*r_length)++;
 		}
 	}
 	return r_adj;
 }
 
-int **inv(int **adj,int row,int column)
-{
-	int **ans=init_2_matrix(row,column);
-	int n=row*column;
-	if(n==1)
-	{
-		ans[0][0] = 1;
-		return ans;
-	}
-	int i,j,k,t;
-	int **temp=init_2_matrix(row,column);
-	for(i=0;i<n;i++)
-	{
-		for(j=0;j<n;j++)
-		{
-			for(k=0;k<n-1;k++)
-			{
-				for(t=0;t<n-1;t++)
-				{
-					temp[k][t] = adj[k>=i?k+1:k][t>=j?t+1:t];
-				}
-			}
-
-		
-			ans[j][i]  =  getA(temp,n-1,row,column);
-			if((i+j)%2 == 1)
-			{
-				ans[j][i] = - ans[j][i];
-			}
-		}
-	}
-	return ans;
-}
-
-static int getA(int **arcs,int n,int row,int column)//按第一行展开计算|A|
+static int getA(int **arcs,int n,int row,int column)
 {
 	if(n==1)
 	{
@@ -786,6 +770,44 @@ static int getA(int **arcs,int n,int row,int column)//按第一行展开计算|A|
 	}
 	return ans;
 }
+
+int **inv(int **adj,int row,int column)
+{
+	int **ans=init_2_matrix(row,column);
+	int n=row;//*column;
+	if(n==1)
+	{
+		ans[0][0] = 1;
+		return ans;
+	}
+	int i,j,k,t;
+	int **temp=init_2_matrix(row,column);
+	for(i=0;i<n;i++)
+	{
+		for(j=0;j<n;j++)
+		{
+			for(k=0;k<n-1;k++)
+			{
+				for(t=0;t<n-1;t++)
+				{
+					temp[k][t] = adj[k>=i?k+1:k][t>=j?t+1:t];
+				}
+			}
+
+		
+			ans[j][i]  =  getA(temp,n-1,row,column);
+			if((i+j)%2 == 1)
+			{
+				ans[j][i] = - ans[j][i];
+			}
+		}
+	}
+	return ans;
+}
+
+
+
+
 
 
 

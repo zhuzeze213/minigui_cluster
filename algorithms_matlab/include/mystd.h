@@ -116,6 +116,7 @@ double **matrix_operate_double_int_2(double **pri,int **beh,char ope,int row,int
 int **matrix_multiply_int(int **pri,int **beh,int row1,int column1,int row2,int column2);
 double **matrix_multiply(double **pri,double **beh,int row1,int column1,int row2,int column2);
 double **matrix_multiply_int_2(double **pri,int **beh,int row1,int column1,int row2,int column2);
+double **matrix_multiply_int_1(int **pri,double **beh,int row1,int column1,int row2,int column2);
 
 int find_int(int **adj,int *r,int *c,int *v,int edge,int row,int column);
 int find_double(double **adj,int *r,int *c,double *v,int edge,int row,int column);
