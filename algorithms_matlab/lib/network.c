@@ -1,5 +1,6 @@
 #include "../include/mystd.h"
 
+/* init an array.length is num */
 int *init_matrix(int num)
 {
 	int *adj=(int *)malloc(sizeof(int)*num);
@@ -12,11 +13,13 @@ int *init_matrix(int num)
 	return NULL;
 }
 
+/* free an array */
 void free_matrix(int *matrix)
 {
 	free(matrix);
 }
 
+/*init an array of double length is num */
 double *init_matrix_double(int num)
 {
 	double *adj=(double *)malloc(sizeof(double)*num);
@@ -29,11 +32,13 @@ double *init_matrix_double(int num)
 	return NULL;
 }
 
+/* free an array of double */
 void free_matrix_double(double *matrix)
 {
 	free(matrix);
 }
 
+/*init 2 dimension array,length is row,width is column*/
 int **init_2_matrix(int row,int column)
 {
 	int **adj;
@@ -60,6 +65,7 @@ int **init_2_matrix(int row,int column)
 	return adj;
 }
 
+/* free 2 dimensions array */
 void free_2_matrix(int **matrix,int row)
 {
 	int i;
@@ -69,6 +75,7 @@ void free_2_matrix(int **matrix,int row)
 
 }
 
+/*init 2 dimension array of double,length is row,width is column*/
 double **init_2_matrix_double(int row,int column)
 {
 	double **adj;
@@ -95,6 +102,7 @@ double **init_2_matrix_double(int row,int column)
 	return adj;
 }
 
+/* free 2 dimension matrix of double */
 void free_2_matrix_double(double **matrix,int row)
 {
 	int i;
@@ -103,6 +111,7 @@ void free_2_matrix_double(double **matrix,int row)
 	free(matrix);
 }
 
+/* print the numbers in the array.array length is length */
 void print_matrix(int *adj,int length)
 {
 	int i;
@@ -121,6 +130,7 @@ void print_matrix_double(double *adj,int length)
 	printf("\n\n");
 }
 
+/* print the numbers in the array of double.array length is length */
 void print_2_matrix(int **adj,int row,int column)
 {
 	int i,j;
@@ -174,6 +184,7 @@ int init_network_double(struct network_double *network,int row,int column,int no
                 return ERROR;
 }
 
+/* copy some numbers in an array *old [start,end) to new array *new begin index is start2 */
 int copy_matrix(int *old,int *new,int start,int end,int start2)
 {
 	if(old&&new){
@@ -199,6 +210,9 @@ int copy_matrix_double(double *old,double *new,int start,int end,int start2)
 	}
 	return ERROR;
 }
+
+/* copy all numbers in an 2 dimensions array **old to new array *new.
+two arrays row and column are equal*/
 int copy_2_matrix(int **old,int **new,int row,int column)
 {
 	if(old&&new){
@@ -223,6 +237,8 @@ int copy_2_matrix_double(double **old,double **new,int row,int column)
 	return ERROR;
 }
 
+/* copy some numbers in an 2 dimensions array **old begin index(sx,sy),end index(ex,ey),
+ to new array **new begin index(sx2,sy2)*/
 int copy_2_matrix_double_scope(double **old,double **new,int sx,int sy,int ex,int ey,int sx2,int sy2)
 {
 	if(old&&new){
@@ -239,6 +255,7 @@ int copy_2_matrix_double_scope(double **old,double **new,int sx,int sy,int ex,in
 	}
 	return ERROR;
 }
+
 int copy_2_matrix_double_int_1(int **old,double **new,int row,int column)
 {
 	if(old&&new){

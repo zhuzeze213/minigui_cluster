@@ -2,7 +2,7 @@
 
 #define RAND 0.1234567
 
-/* Function option(int) return the number of array*/
+/* Function option() return the number of array*/
 double option(double fcm[],int num)
 {
 	if(fcm)
@@ -10,7 +10,8 @@ double option(double fcm[],int num)
 	else return ERROR;
 }
 
-/*Function size(int ***adj,int num)  if num==1 return row,if num==2 return column.no use!*/
+/*Function size(int ***adj,int num)  if num==1 return row,if num==2 return column.no use!
+ATTENTION!it only use in **matrix has already embeded in the strucure network!*/
 int size(int ***matrix,int num)
 {
 	if(matrix&&*matrix){
@@ -25,7 +26,8 @@ int size(int ***matrix,int num)
 		return ERROR;
 }
 
-/* Function length(int ***adj) return the max between row and column no use!*/
+/* Function length(int ***adj) return the max between row and column no use!
+ATTENTION!it only use in **matrix has already embeded in the strucure network!*/
 int length(int ***matrix)
 {
 	if(matrix!=NULL){
@@ -37,7 +39,7 @@ int length(int ***matrix)
 		return ERROR;
 }
 
-/*Function int *find(int *adj)return the index not equal with 0*/
+/*return the index not equal with 0*/
 int *find(int *matrix,int column)
 {
 	if(matrix){
@@ -57,6 +59,7 @@ int *find(int *matrix,int column)
 
 }
 
+/* fill the matrix with the parameter num*/
 int fill(int **adj,int num,int row,int column)
 {
 	if(adj){
@@ -69,6 +72,8 @@ int fill(int **adj,int num,int row,int column)
 	return ERROR;
 }
 
+/* fill the matrix with the parameter num
+if num==RAND,fill the matrix with the random number!*/
 int fill_double(double **adj,double num,int row,int column) 
 {
         if(adj){
@@ -86,6 +91,7 @@ int fill_double(double **adj,double num,int row,int column)
         return ERROR;
 }
 
+/* init the matrix and fill 0!*/
 int **zeros(int row,int column)
 {
 	int **adj;
@@ -106,6 +112,7 @@ double **zeros_double(int row,int column)
 	return NULL;
 }
 
+/* init the matrix and fill 1!*/
 int **ones(int row,int column)
 {
 	int **adj;
@@ -126,6 +133,7 @@ double **ones_double(int row,int column)
 	return NULL;
 }
 
+/* init the matrix and fill random numbers [0,1)!*/
 double **rand_matlab(int row,int column)
 {
 	double **adj;
@@ -136,7 +144,8 @@ double **rand_matlab(int row,int column)
 	return NULL;
 }
 
-/*Function sum(int **adj,int num,int row,int column) if num==1 return the sum of column num==2 return row*/
+/*if num==1 return the sum of column 
+num==2 return row*/
 int *sum(int **adj,int num,int row,int column)
 {
 	if(num==1){
@@ -237,7 +246,7 @@ int *column_num(int **adj,int num,int row,int column)
 	return NULL;
 }
 
-/*get matrix'	*/
+/*get matrix'(transposition-matrix)	*/
 int **transposition(int **matrix,int row,int column)
 {
 	int **adj;
@@ -266,7 +275,12 @@ double **transposition_double(double **matrix,int row,int column)
 	}
 	return NULL;	
 }
-/* n is *v size*/
+/* n is *v size,pos is offset
+for examle v=[1,2,3] create_diag(v,3,1) return the matrix
+0 1 0 0
+0 0 2 0
+0 0 0 3
+0 0 0 0 */
 int **create_diag(int *v,int n,int pos)
 {
 	if(pos>=0&&v){
@@ -341,6 +355,10 @@ double **create_diag_double(double *v,int n,int pos)
 		return NULL;	
 }
 
+/* for example old[1,2,3] copy=2 return the matrix
+1 2 3
+1 2 3
+*/
 double **copy_double(double *old,int copy,int length)
 {
 	double **adj;
@@ -355,7 +373,8 @@ double **copy_double(double *old,int copy,int length)
 	}
 	return NULL;
 }
-	
+
+/* in matlab two matrix operate a.*b need the following function,only support +-/* */	
 double **matrix_operate_double(double **pri,double **beh,char ope,int row,int column)
 {
 	int i,j;
@@ -482,6 +501,7 @@ double **matrix_operate_double_int_2(double **pri,int **beh,char ope,int row,int
 		return adj;	
 }
 
+/*two matrix multiply a*b */
 int **matrix_multiply_int(int **pri,int **beh,int row1,int column1,int row2,int column2)
 {
 	if(column1!=row2) return NULL;
@@ -550,6 +570,7 @@ double **matrix_multiply_int_2(double **pri,int **beh,int row1,int column1,int r
         return NULL;
 }
 
+/* return number is not 0 row index in *r,column index in *c,number in *v */
 int find_int(int **adj,int *r,int *c,int *v,int edge,int row,int column)
 {
 	if(r&&c&&v){
@@ -645,7 +666,7 @@ int *sort_double(double *D,double *s_D,int length)
 	return NULL;
 			
 }
-
+/* return the sum of numbers in *D */
 int sum_1(int *D,int length)
 {
 	if(!D) return ERROR;
@@ -665,6 +686,7 @@ double sum_1_double(double *D,int length)
 	return sum;	
 }
 
+/*return 1 if all number equal in *a and *b*/
 int equal_int_1(int *a,double *b,int length)
 {
 	int i;
@@ -676,6 +698,7 @@ int equal_int_1(int *a,double *b,int length)
 	return 1;
 }
 
+/* return the edge in **adj */
 int edge_matrix_double(double **adj,int row,int column)
 {
 	if(!adj) return ERROR;
@@ -705,7 +728,7 @@ int min_double(double *D,double *min,int length)
 	return minindex;
 	
 }
-
+/* return sum of diagonal*/
 double trace(double **adj,int row)
 {
 	double sum=0.0;
@@ -716,6 +739,8 @@ double trace(double **adj,int row)
 	return sum;
 }
 
+/* return the r_length is *adj include how many numbers is different,*r_adj include 
+all numbers which is different*/
 int *unique(int *adj,int length,int *r_length)
 {
 	if(!adj) return NULL;
@@ -771,6 +796,7 @@ static int getA(int **arcs,int n,int row,int column)
 	return ans;
 }
 
+/* return inverse matrix */
 int **inv(int **adj,int row,int column)
 {
 	int **ans=init_2_matrix(row,column);
@@ -805,6 +831,7 @@ int **inv(int **adj,int row,int column)
 	return ans;
 }
 
+/* if num is in *adj return index */
 int find_num(int *adj,int length,int num)
 {
 	int i;
