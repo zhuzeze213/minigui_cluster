@@ -764,14 +764,14 @@ int *unique(int *adj,int length,int *r_length)
 	return r_adj;
 }
 
-static int getA(int **arcs,int n,int row,int column)
+static double getA(double **arcs,int n,int row,int column)
 {
 	if(n==1)
 	{
 		return arcs[0][0];
 	}
-	int ans = 0;
-	int **temp=init_2_matrix(row,column);
+	double ans = 0.0;
+	double **temp=init_2_matrix_double(row,column);
 	int i,j,k;
 	for(i=0;i<n;i++)
 	{
@@ -783,7 +783,7 @@ static int getA(int **arcs,int n,int row,int column)
 				
 			}
 		}
-		int t = getA(temp,n-1,row,column);
+		double t = getA(temp,n-1,row,column);
 		if(i%2==0)
 		{
 			ans += arcs[0][i]*t;
@@ -793,21 +793,22 @@ static int getA(int **arcs,int n,int row,int column)
 			ans -=  arcs[0][i]*t;
 		}
 	}
+	free_2_matrix_double(temp,row);
 	return ans;
 }
 
 /* return inverse matrix */
-int **inv(int **adj,int row,int column)
+double **inv(int **adj,int row,int column)
 {
-	int **ans=init_2_matrix(row,column);
+	double **ans=init_2_matrix_double(row,column);
 	int n=row;//*column;
 	if(n==1)
 	{
-		ans[0][0] = 1;
+		ans[0][0] = 1.0;
 		return ans;
 	}
 	int i,j,k,t;
-	int **temp=init_2_matrix(row,column);
+	double **temp=init_2_matrix_double(row,column);
 	for(i=0;i<n;i++)
 	{
 		for(j=0;j<n;j++)
@@ -816,7 +817,7 @@ int **inv(int **adj,int row,int column)
 			{
 				for(t=0;t<n-1;t++)
 				{
-					temp[k][t] = adj[k>=i?k+1:k][t>=j?t+1:t];
+					temp[k][t] = adj[k>=i?k+1:k][t>=j?t+1:t]*1.0;
 				}
 			}
 
@@ -828,6 +829,7 @@ int **inv(int **adj,int row,int column)
 			}
 		}
 	}
+	free_2_matrix_double(temp,row);
 	return ans;
 }
 
@@ -836,7 +838,7 @@ int find_num(int *adj,int length,int num)
 {
 	int i;
 	for(i=0;i<length;i++){
-		if(adj[i]==num]
+		if(adj[i]==num)
 			return i;
 	}
 	return -1;

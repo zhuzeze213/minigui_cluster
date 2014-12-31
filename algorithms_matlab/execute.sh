@@ -34,5 +34,10 @@ make
 mv sa ../bin
 make clean
 
+cd ../kernighan_lin
+make
+mv kl ../bin
+make clean
+
 cd ../lib
 rm *.o
