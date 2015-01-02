@@ -374,6 +374,47 @@ double **copy_double(double *old,int copy,int length)
 	return NULL;
 }
 
+int **matrix_operate_double_int(int **pri,int **beh,char ope,int row,int column)
+{
+	int i,j;
+	int **adj=init_2_matrix_double(row,column);
+	switch(ope){
+		case '+':{
+			for(i=0;i<row;i++)
+				for(j=0;j<column;j++)
+						adj[i][j]=pri[i][j]+beh[i][j];
+						
+			break;
+		}
+		
+		case '-':{
+			for(i=0;i<row;i++)
+				for(j=0;j<column;j++)
+						adj[i][j]=pri[i][j]-beh[i][j];
+						
+			break;
+		}
+		
+		case '*':{
+			for(i=0;i<row;i++)
+				for(j=0;j<column;j++)
+						adj[i][j]=pri[i][j]*beh[i][j];
+						
+			break;
+		}
+		
+		case '/':{
+			for(i=0;i<row;i++)
+				for(j=0;j<column;j++)
+						adj[i][j]=pri[i][j]/beh[i][j];
+						
+			break;
+		}
+		
+		default: return NULL;
+	}	
+		return adj;
+}
 /* in matlab two matrix operate a.*b need the following function,only support +-/* */	
 double **matrix_operate_double(double **pri,double **beh,char ope,int row,int column)
 {

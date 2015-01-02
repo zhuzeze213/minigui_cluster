@@ -110,6 +110,7 @@ double **transposition_double(double **matrix,int row,int column);
 int **create_diag(int *v,int n,int pos);
 double **create_diag_double(double *v,int n,int pos);
 double **copy_double(double *old,int copy,int length);
+int **matrix_operate_double_int(int **pri,int **beh,char ope,int row,int column);
 double **matrix_operate_double(double **pri,double **beh,char ope,int row,int column);
 double **matrix_operate_double_int_1(int **pri,double **beh,char ope,int row,int column);
 double **matrix_operate_double_int_2(double **pri,int **beh,char ope,int row,int column);
