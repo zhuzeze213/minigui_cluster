@@ -21,7 +21,7 @@
  *	Modified on                                                                  *
  *	Collaborators:                                                               *
  *  Location: Zhejiang province in China                                         *
- *	Project: Minigui community detection programs                           *
+ *	Project: Minigui community detection program                                 *
  *                                                                               *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
  
@@ -38,12 +38,11 @@
 #include<minigui/control.h>
 #include "myarg.h"
 #include "menu.h"
-#include "notebook.h"
+#include "button.h"
 
-int algorithm=0,networks=0;
 char filename[FILE_SIZE];
 static int step = 12;
-
+int result=0;
 static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
 {
 	HDC hdc;
@@ -51,13 +50,13 @@ static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
     	static int iStartPos = 0;
 	switch(message){
 		case MSG_CREATE:
-            	SetScrollRange (hWnd, SB_VERT, 0, 20*12);
-		SetScrollRange (hWnd, SB_HORZ, 0, 20*12);
-		EnableScrollBar (hWnd, SB_VERT, TRUE);
-            	EnableScrollBar (hWnd, SB_HORZ, TRUE);
-		ShowScrollBar(hWnd, SB_VERT, TRUE);
-                ShowScrollBar(hWnd, SB_HORZ, TRUE); 
-		return 0;
+            SetScrollRange (hWnd, SB_VERT, 0, 20*12);
+			SetScrollRange (hWnd, SB_HORZ, 0, 20*12);
+			EnableScrollBar (hWnd, SB_VERT, TRUE);
+            EnableScrollBar (hWnd, SB_HORZ, TRUE);
+			ShowScrollBar(hWnd, SB_VERT, TRUE);
+            ShowScrollBar(hWnd, SB_HORZ, TRUE); 
+			return 0;
 		
 		case MSG_HSCROLL:
             	{
@@ -106,14 +105,10 @@ static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
         	}
 		
 		case MSG_PAINT:
-		if(!algorithm){
+		
+		if(!result){
 			hdc=BeginPaint(hWnd);
 			TextOut(hdc,0,0,"Welcome to use \"Comunity detection algorithms platform!\"");
-			EndPaint(hWnd,hdc);
-		}
-		else if(algorithm&&!networks){
-			hdc=BeginPaint(hWnd);
-			TextOut(hdc,0,0,"you have choosen the algorithm,please choose the network!");
 			EndPaint(hWnd,hdc);
 		}
 		else{
@@ -145,22 +140,12 @@ static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
 */
 		case MSG_COMMAND:
 		switch (wParam) {
-			case IDM_FCM:
-			algorithm=1;
-			strcpy(filename,"fcm");
+			case IDM_NEW:
+			DlgYourTaste.controls = CtrlYourTaste;    
+			DialogBoxIndirectParam (&DlgYourTaste, hWnd, DialogBoxProc2, 0L);
 			InvalidateRect (hWnd, NULL, TRUE);
 			break;
 
-			case IDM_KARATE:
-			networks=1;
-			InvalidateRect(hWnd,NULL,TRUE);
-			break;
-
-			case IDM_RIGHT_BUTTON+5: //fresh
-			algorithm=networks=0;
-			InvalidateRect(hWnd,NULL,TRUE);
-			
-			break;
 		}
 		return 0;
 

@@ -6,7 +6,29 @@
 #define IDM_3 102
 #define IDM_4 103
 
-#define IDM_OPTIMIZATION 0
+/* MAIN MENU */
+#define IDM_FILE 1000
+#define IDM_NEW 1001
+#define IDM_SAVE_RESULT 1002
+#define IDM_OUTPUT 1003
+#define IDM_IMPORT_A 1004
+#define IDM_IMPORT_D 1005
+#define IDM_SET_PATH 1006
+#define IDM_EXIT 1007
+
+#define IDM_EDIT 1100
+#define IDM_SOURCE_CODE 1101
+#define IDM_EVALUATE 1102
+#define IDM_FRESH 1103
+#define IDM_CLEAR_W 1104
+#define IDM_CLEAR_F 1105
+
+#define IDM_HELP 1200
+#define IDM_HOW_TO 1201
+#define IDM_ABOUT 1202
+
+/* algorithms */
+#define IDM_OPTIMIZATION 3
 #define IDM_AVERAGE_CUT 1
 #define IDM_RATIO_CUT 2
 #define IDM_NORMALIZED_CUT 3
@@ -17,7 +39,7 @@
 #define IDM_CM 21
 #define IDM_SA 22
 
-#define IDM_HEURISTIC 7
+#define IDM_HEURISTIC 1
 #define IDM_MFC 8
 #define IDM_GIRVAN_NEWMAN 9
 #define IDM_TYLER 10
@@ -28,7 +50,7 @@
 #define IDM_CPM 15
 #define IDM_FCM 23
 
-#define IDM_OTHERS 16
+#define IDM_OTHERS 2
 #define IDM_INFOMAP 17
 #define IDM_WALKTRAP 18
 #define IDM_HALL 19
@@ -44,5 +66,5 @@
 #define IDM_MY_NETWORKS 208
 
 #define IDM_RIGHT_BUTTON 50
-#define NUM_RIGHT_BUTTON 7
+
 #endif
