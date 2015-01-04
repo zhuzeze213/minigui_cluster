@@ -1,14 +1,6 @@
 #ifndef LIST_H
 #define LIST_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <limits.h>
-#include <time.h>
-#include <math.h>
-
 struct list_head {
 	struct list_head *next, *prev;
 };

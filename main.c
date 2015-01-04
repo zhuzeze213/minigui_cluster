@@ -108,7 +108,7 @@ static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
 		
 		if(!result){
 			hdc=BeginPaint(hWnd);
-			TextOut(hdc,0,0,"Welcome to use \"Comunity detection algorithms platform!\"");
+			TextOut(hdc,0,0,"Welcome to use \"Community detection algorithms platform!\"");
 			EndPaint(hWnd,hdc);
 		}
 		else{
