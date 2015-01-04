@@ -5,9 +5,9 @@
 #define MAX_SIZE 100
 #define MAGIC 0.1234567
 
-struct multiset_struct{
-	double set_array[MAX_SIZE];
-	/*general*/
+struct multiset_operate
+{
+    /*general*/
 	void (*printSet)      (struct multiset_struct set);
 	int  (*size)          (struct multiset_struct set);
 	int  (*empty)         (struct multiset_struct set);
@@ -31,7 +31,11 @@ struct multiset_struct{
 	int  (*find)          (struct multiset_struct *set,double value);
 	/*exchange*/
 	void (*swap)          (struct multiset_struct *set,struct multiset_struct *old);	
-}
+};
+struct multiset_struct{
+	double set_array[MAX_SIZE];
+	struct multiset_operate *ope;
+};
 
 int size(struct multiset_struct set)
 {

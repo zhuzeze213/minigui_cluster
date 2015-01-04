@@ -5,8 +5,8 @@
 #define MAX_SIZE 100
 #define MAGIC 0.1234567
 
-struct set_struct{
-	double set_array[MAX_SIZE];
+struct set_operate
+{
 	/*general*/
 	void (*printSet)      (struct set_struct set);
 	int  (*size)          (struct set_struct set);
@@ -31,7 +31,12 @@ struct set_struct{
 	int  (*find)          (struct set_struct *set,double value);
 	/*exchange*/
 	void (*swap)          (struct set_struct *set,struct set_struct *old);	
-}
+};
+
+struct set_struct{
+	double set_array[MAX_SIZE];
+	struct set_operate *ope;
+};
 
 int size(struct set_struct set)
 {

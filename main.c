@@ -145,8 +145,10 @@ static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
 			DialogBoxIndirectParam (&DlgYourTaste, hWnd, DialogBoxProc2, 0L);
 			InvalidateRect (hWnd, NULL, TRUE);
 			break;
-
+			
+			
 		}
+			
 		return 0;
 
 		case MSG_RBUTTONDOWN:
