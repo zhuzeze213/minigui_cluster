@@ -1,4 +1,5 @@
 rm *.c~
+rm -rf ./bin
 mkdir ./bin
 
 cd ./lib
