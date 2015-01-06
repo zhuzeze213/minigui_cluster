@@ -885,9 +885,62 @@ int find_num(int *adj,int length,int num)
 	return -1;
 }
 
+int erase_line_matrix(int **adj,int index,int length)
+{
+	if(!adj||index>=length) return ERROR;
+	int *adj_tmp=init_matrix(length-1);
+	int i,i2=0;
+	for(i=0;i<length;i++){
+		if(i!=index){
+			adj_tmp[i2]=(*adj)[i];
+			i2++;
+		}
+	}
+	(*adj)=init_matrix(length-1);
+	copy_matrix(adj_tmp,*adj,0,length-1,0);	
+	free_matrix(adj_tmp);
+	return DONE;
+}
 
-
-
+int erase_line_2_matrix(int ***adj,int num,int index,int row,int column)
+{
+	if(!adj) return ERROR;
+	if(num==1){
+		int **adj_tmp=init_2_matrix(row-1,column);
+		int i,j,i2=0,j2=0;
+		for(i=0;i<row;i++){
+			if(i!=index){
+				for(j=0;j<column;j++){
+					adj_tmp[i2][j2]=(*adj)[i][j];
+					j2++;
+				}
+				i2++;
+				j2=0;
+			}
+		}
+		(*adj)=init_2_matrix(row-1,column);
+		copy_2_matrix(adj_tmp,*adj,row-1,column);
+		free_2_matrix(adj_tmp,row-1);
+		return DONE;
+	}
+	else if(num==2){
+		int **adj_tmp=init_2_matrix(row,column-1);
+		int i,j,i2=0,j2=0;
+		for(i=0;i<row;i++){
+			for(j=0;j<column;j++){
+				if(j!=index){
+					adj_tmp[i2][j2]=(*adj)[i][j];
+					j2++;
+				}
+			}
+			i2++;
+			j2=0;
+		}
+		(*adj)=init_2_matrix(row,column-1);
+		copy_2_matrix(adj_tmp,*adj,row,column-1);	
+		free_2_matrix(adj_tmp,row);
+	}			
+}
 
 
 

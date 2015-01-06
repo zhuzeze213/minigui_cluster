@@ -150,9 +150,42 @@ double fast_mo(int **adj,int *com,int row,int column,int edge)
 			moved=0;
 			int r_length;
 			int *cl=unique(com,row,&r_length);
+			int row3=row;
 			while(cl){
+				int idx=rand()%r_length;
+				int cn=cl[idx];
+				int *cl_tmp=init_matrix(row3-1);
+				int i3=0;
+				for(i=0;i<row3;i++){
+					if(i!=idx){
+						cl_tmp[i3]=cl[i];
+						i3++;
+					}
+				}
+				l=init_matrix(row3-1);
+				copy_matrix(cl_tmp,cl,0,row3-1,0);
+				row3--;
 				
-		
+				int ncn=find_num(com,row,cn);
+				int *nbn=unique(Nbs[ncn],row,&r_length);
+				int *com_tmp=init_matrix(r_length);
+				for(i=0;i<r_length;i++)
+					com_tmp[i]=com[nbn[i]];
+				int r_length2;
+				int *ncom=unique(com_tmp,r_length,&r_length2);
+				int *ncom_tmp=init_matrix(r_length2-1);
+				int i4=0;
+				for(i=0;i<r_length2;i++){
+					if(i!=find_num(ncom,r_length,cn)){
+						ncom_tmp[i4]=ncom[i];
+						i4++;
+					}
+				}
+		        ncom=init_matrix(r_length2-1);
+				copy_matrix(ncom_tmp,ncom,0,r_length2,0);
+				
+				double best_dQ=0;
+				double sum_dn1=
 		
 		
 	

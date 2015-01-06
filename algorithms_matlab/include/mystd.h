@@ -132,5 +132,8 @@ double trace(double **adj,int row);
 int *unique(int *adj,int length,int *r_length);
 double **inv(int **adj,int row,int column);
 int find_num(int *adj,int length,int num);
+int erase_line_matrix(int **adj,int index,int length);
+int erase_line_2_matrix(int ***adj,int num,int index,int row,int column);
+
 #endif
 
