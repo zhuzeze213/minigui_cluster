@@ -59,6 +59,24 @@ int *find(int *matrix,int column)
 
 }
 
+int *find_count(int *matrix,int column,int *count)
+{
+	if(matrix){
+		int *adj=init_matrix(column);
+		if(adj){
+			int index=0;*count=0;
+			for(;index<column;index++){
+				if(matrix[index]!=0){
+					adj[*count]=index;
+					(*count)++;
+				}
+			}
+			return adj;
+		}
+	}
+	return NULL;
+
+}
 /* fill the matrix with the parameter num*/
 int fill(int **adj,int num,int row,int column)
 {

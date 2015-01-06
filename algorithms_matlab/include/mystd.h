@@ -93,6 +93,7 @@ double **loadmatrix_double(char *filename,struct network_double *network);
 int size(int ***matrix,int num);
 int length(int ***matrix);
 int *find(int *matrix,int column);
+int *find_count(int *matrix,int column,int *count);
 int fill(int **adj,int num,int row,int column);
 int fill_double(double **adj,double num,int row,int column);
 int **zeros(int row,int column);
