@@ -92,7 +92,9 @@ static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
 {
     if (nc == BN_CLICKED) {
         SetWindowText (GetDlgItem (GetParent (hwnd), IDC_PROMPT), prompts [id]);
+	//printf("%d\n",id);
     }
+
 }
 
 int DialogBoxProc2 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)

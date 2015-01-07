@@ -39,10 +39,12 @@
 #include "myarg.h"
 #include "menu.h"
 #include "button.h"
+#include "listbox.h"
 
 char filename[FILE_SIZE];
 static int step = 12;
 int result=0;
+int choose=0;
 static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
 {
 	HDC hdc;
@@ -146,7 +148,10 @@ static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
 			InvalidateRect (hWnd, NULL, TRUE);
 			break;
 			
-			
+			case IDM_SOURCE_CODE:
+			DlgDelFiles.controls = CtrlDelFiles;    
+			DialogBoxIndirectParam (&DlgDelFiles, hWnd, DelFilesBoxProc, 0L);
+						
 		}
 			
 		return 0;

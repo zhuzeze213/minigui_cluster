@@ -40,5 +40,10 @@ make
 mv kl ../bin
 make clean
 
+cd ../kmeans
+make
+mv kmeans ../bin
+make clean
+
 cd ../lib
 rm *.o
