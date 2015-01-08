@@ -23,13 +23,13 @@
 #define IDL_FILE   110
 #define IDC_PATH   120
 
-#define     deleting_the_files              "Deleting the files"
-#define     directories                     "Directories:"
+#define     look_the_files               "looking the files"
+#define     directories                      "Directories:"
 #define     files_                           "Files:"
 #define     path_                            "Path: "
-#define     delete_                         "Delete"
+#define     look_                             "Look"
 #define     cancel_                          "Cancel"
-#define     deleting_files_                  "Deleting files"
+#define     looking_files_                  "looking files"
 
 DLGTEMPLATE DlgDelFiles;
 CTRLDATA CtrlDelFiles[7];

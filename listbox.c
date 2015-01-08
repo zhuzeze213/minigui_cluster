@@ -7,7 +7,7 @@ DLGTEMPLATE DlgDelFiles =
     WS_BORDER | WS_CAPTION,
     WS_EX_NONE,
     100, 100, 304, 225,
-    deleting_the_files,
+    look_the_files,
     0, 0,
     7, NULL,
     0
@@ -41,7 +41,7 @@ CTRLDATA CtrlDelFiles[] =
     },
     {
         CTRL_LISTBOX,
-        WS_VISIBLE | WS_VSCROLL | WS_BORDER | LBS_SORT | LBS_AUTOCHECKBOX,
+        WS_VISIBLE | WS_VSCROLL | WS_BORDER | LBS_SORT | LBS_AUTOCHECKBOX| LBS_NOTIFY,
         150, 30, 130, 100,
         IDL_FILE,
         "",
@@ -60,7 +60,7 @@ CTRLDATA CtrlDelFiles[] =
         WS_VISIBLE | BS_DEFPUSHBUTTON | WS_TABSTOP | WS_GROUP,
         10, 170, 130, 25,
         IDOK, 
-        delete_,
+        look_,
         0
     },
     {
@@ -168,13 +168,20 @@ static void dir_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
 
 static void file_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
 {
-    /* Do nothing */
+	if (nc == LBN_DBLCLK || nc == LBN_ENTER) {
+		int cur_sel = SendMessage (hwnd, LB_GETCURSEL, 0, 0L);
+		char file[1024];
+        	if (cur_sel >= 0) {
+			SendMessage (hwnd, LB_GETTEXT, cur_sel, (LPARAM)file);
+		}
+		MessageBox (hwnd, file, looking_files_, MB_OK | MB_ICONINFORMATION);
+	}
 }
 
 static void prompt (HWND hDlg)
 {
     int i;
-    char files [1024] = "The files followed will be deleted\n";
+    char files [1024] = "The files followed will be looked\n";
 
     for (i = 0; i < SendDlgItemMessage (hDlg, IDL_FILE, LB_GETCOUNT, 0, 0L); i++) {
 	char file [MAX_NAME + 1];
@@ -186,7 +193,7 @@ static void prompt (HWND hDlg)
 	}
     }
 
-    MessageBox (hDlg, files, deleting_files_, MB_OK | MB_ICONINFORMATION);
+    MessageBox (hDlg, files, looking_files_, MB_OK | MB_ICONINFORMATION);
 
 }
 
