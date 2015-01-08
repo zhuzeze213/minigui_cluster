@@ -8,6 +8,7 @@
 #include <limits.h>
 #include <time.h>
 #include <math.h>
+#include <ctype.h>
 
 #define offsetof(TYPE, MEMBER) ((int) &((TYPE *)0)->MEMBER)
 
