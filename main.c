@@ -45,6 +45,8 @@ char filename[FILE_SIZE];
 static int step = 12;
 int result=0;
 int choose=0;
+volatile int clear_w=0,fresh=0;
+char tmpdir[1024];
 static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
 {
 	HDC hdc;
@@ -108,9 +110,13 @@ static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
 		
 		case MSG_PAINT:
 		
-		if(!result){
+		if(!result&&!clear_w||fresh){
 			hdc=BeginPaint(hWnd);
 			TextOut(hdc,0,0,"Welcome to use \"Community detection algorithms platform!\"");
+			EndPaint(hWnd,hdc);
+		}
+		else if(clear_w){
+			hdc=BeginPaint(hWnd);
 			EndPaint(hWnd,hdc);
 		}
 		else{
@@ -147,10 +153,32 @@ static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
 			DialogBoxIndirectParam (&DlgYourTaste, hWnd, DialogBoxProc2, 0L);
 			InvalidateRect (hWnd, NULL, TRUE);
 			break;
+
+			case IDM_EXIT:
+			DestroyMainWindow(hWnd);
+			PostQuitMessage(hWnd);
+			break;
 			
 			case IDM_SOURCE_CODE:
 			DlgDelFiles.controls = CtrlDelFiles;    
 			DialogBoxIndirectParam (&DlgDelFiles, hWnd, DelFilesBoxProc, 0L);
+			break;
+
+			case IDM_FRESH:
+			fresh=1;
+			clear_w=0;
+			InvalidateRect (hWnd, NULL, TRUE);
+			break;
+
+			case IDM_CLEAR_W:
+			clear_w=1;
+			fresh=0;
+			InvalidateRect (hWnd, NULL, TRUE);
+			break;
+
+			case IDM_ABOUT:
+			MessageBox(hWnd, VERSION, "Minigui-Cluster", MB_OK | MB_ICONINFORMATION);
+			break;
 						
 		}
 			
