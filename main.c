@@ -153,6 +153,11 @@ static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
 			DialogBoxIndirectParam (&DlgYourTaste, hWnd, DialogBoxProc2, 0L);
 			InvalidateRect (hWnd, NULL, TRUE);
 			break;
+			
+			case IDM_SET_PATH:
+			DlgSetPath.controls=CtrlSetPath;
+			DialogBoxIndirectParam(&DlgSetPath, hWnd, SetPathBoxProc,0L);
+			break;
 
 			case IDM_EXIT:
 			DestroyMainWindow(hWnd);

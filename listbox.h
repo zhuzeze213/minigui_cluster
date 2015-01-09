@@ -22,6 +22,8 @@
 #define IDL_DIR    100
 #define IDL_FILE   110
 #define IDC_PATH   120
+#define IDC_CHAR   130
+#define CHAR_CHANGE 50
 
 #define     look_the_files               "looking the files"
 #define     directories                      "Directories:"
@@ -34,6 +36,10 @@
 DLGTEMPLATE DlgDelFiles;
 CTRLDATA CtrlDelFiles[7];
 
+DLGTEMPLATE DlgSetPath;
+CTRLDATA CtrlSetPath[8];
+
 int DelFilesBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam);
+int SetPathBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam);
 #endif
 

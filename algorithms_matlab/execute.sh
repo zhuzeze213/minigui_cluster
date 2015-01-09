@@ -45,5 +45,10 @@ make
 mv kmeans ../bin
 make clean
 
+cd ../isodata
+make
+mv isodata ../bin
+make clean
+
 cd ../lib
 rm *.o
