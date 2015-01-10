@@ -228,7 +228,7 @@ int SetPathBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
         char cwd [MAX_PATH + 1];
         SetNotificationCallback (GetDlgItem (hDlg, IDL_DIR), dir_notif_proc);
         SetNotificationCallback (GetDlgItem (hDlg, IDL_FILE), file_notif_proc);
-	SetNotificationCallback (GetDlgItem (hDlg, IDC_CHAR), char_notif_proc);
+	    SetNotificationCallback (GetDlgItem (hDlg, IDC_CHAR), char_notif_proc);
         fill_boxes (hDlg, getcwd (cwd, MAX_PATH));
         return 1;
     }
