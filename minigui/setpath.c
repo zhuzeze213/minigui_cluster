@@ -1,13 +1,13 @@
 
 #include "listbox.h"
-char cd[MAX_PATH+1];
+
 
 DLGTEMPLATE DlgSetPath =
 {
     WS_BORDER | WS_CAPTION,
     WS_EX_NONE,
     100, 100, 304, 280,
-    look_the_files,
+    set_path,
     0, 0,
     8, NULL,
     0
@@ -68,7 +68,7 @@ CTRLDATA CtrlSetPath[] =
         WS_VISIBLE | BS_DEFPUSHBUTTON | WS_TABSTOP | WS_GROUP,
         10, 210, 130, 25,
         IDOK, 
-        look_,
+        "OK",
         0
     },
     {
@@ -142,14 +142,14 @@ static void char_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
 		GetWindowText (hwnd, cd, MAX_PATH);
 		if(opendir(cd))	{
 			SetDlgItemText (GetParent (hwnd), IDC_PATH, cd);
-			SendDlgItemMessage(GetParent (hwnd),IDL_DIR,0,0,CHAR_CHANGE);
+			//SendDlgItemMessage(GetParent (hwnd),IDL_DIR,0,0,CHAR_CHANGE);
 		}
 	}
 			
 }
 static void dir_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
 {
-	if(nc==LBN_SETFOCUS&&cd[0])
+	if(nc==LBN_SETFOCUS&&opendir(cd))
 		fill_boxes (GetParent (hwnd), cd);
 
     if (nc == LBN_DBLCLK || nc == LBN_ENTER) {
@@ -211,12 +211,14 @@ static void prompt (HWND hDlg)
         int status = SendDlgItemMessage (hDlg, IDL_FILE, LB_GETCHECKMARK, i, 0);
         if (status == CMFLAG_CHECKED) {
             SendDlgItemMessage (hDlg, IDL_FILE, LB_GETTEXT, i, (LPARAM)file);
-	    strcat (files, file);
-	    strcat (files, "\n");
-	}
+			strcat (files, file);
+			strcat (files, "\n");
+		}
     }
-
-    MessageBox (hDlg, files, looking_files_, MB_OK | MB_ICONINFORMATION);
+	strcpy(files,cd);
+	strcat (files, "\n");
+	strcat (files, "if the dir not exists,will create it!");
+    MessageBox (hDlg, files, set_path, MB_OK | MB_ICONINFORMATION);
 
 }
 
@@ -227,7 +229,7 @@ int SetPathBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
     {
         char cwd [MAX_PATH + 1];
         SetNotificationCallback (GetDlgItem (hDlg, IDL_DIR), dir_notif_proc);
-        SetNotificationCallback (GetDlgItem (hDlg, IDL_FILE), file_notif_proc);
+    //    SetNotificationCallback (GetDlgItem (hDlg, IDL_FILE), file_notif_proc);
 	    SetNotificationCallback (GetDlgItem (hDlg, IDC_CHAR), char_notif_proc);
         fill_boxes (hDlg, getcwd (cwd, MAX_PATH));
         return 1;
@@ -236,7 +238,9 @@ int SetPathBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
     case MSG_COMMAND:
         switch (wParam) {
         case IDOK:
-            prompt (hDlg);
+        prompt (hDlg);
+	if(!opendir(cd))
+		mkdir(cd,0111);
         case IDCANCEL:
             EndDialog (hDlg, wParam);
             break;

@@ -33,11 +33,14 @@
 #define     cancel_                          "Cancel"
 #define     looking_files_                  "looking files"
 
+#define     set_path                  "Set save path"
+
 DLGTEMPLATE DlgDelFiles;
 CTRLDATA CtrlDelFiles[7];
 
 DLGTEMPLATE DlgSetPath;
 CTRLDATA CtrlSetPath[8];
+char cd[MAX_PATH+1];
 
 int DelFilesBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam);
 int SetPathBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam);
