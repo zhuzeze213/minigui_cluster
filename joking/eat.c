@@ -6,10 +6,11 @@
 #include <termios.h> 
 #include <errno.h>
 #include <fcntl.h>
+#include <math.h>
 #define MAP_X 30
 #define MAP_Y 60
 #define FOOD_SIZE 50
-#define FRESH_TIME 10000
+#define FRESH_TIME 100000
 #define FOOD_TIME 1000000
 struct food
 {
@@ -18,11 +19,15 @@ struct food
 	struct food *next;
 	struct food *prev;
 	int n;
+	int eatnum;
+	int no;
 };
 
 int map[MAP_X][MAP_Y];
 struct food *head;
 int mynum=2,myx=MAP_X/2,myy=MAP_Y/2;
+int sum=FOOD_SIZE;
+int sumn=0;
 void initmap()
 {
 	int i,j;
@@ -48,12 +53,52 @@ void printmap()
 		printf("\n");
 	}
 }
+void *findfood(void *arg)
+{
+	while(1){
+	struct food *work,*eat;
+	double min=10000;
+	for(work=head->next;work;work=work->next){
+		if(work->eatnum){
+			for(eat=head->next;eat;eat=eat->next){
+				if(eat->no==work->eatnum){
+					if(eat->x==work->x&&eat->y==work->y&&work->n>eat->n){
+						work->n+=eat->n;
+						work->eatnum=0;
+						eat->prev->next=eat->next;
+						if(eat->next)
+							eat->next->prev=eat->prev;
+						sum--;
+						//free(eat);
+					}
+					if(eat->x>work->x) work->x++;
+					else if(eat->x<work->x) work->x--;
+					if(eat->y>work->y) work->y++;
+					else if(eat->y<work->y) work->y--;
+				}
+			}
+		}
+		else{
+			for(eat=head->next;eat;eat=eat->next){
+				double tmp=sqrt(abs(eat->x-work->x)*abs(eat->x-work->x)+abs(eat->y-work->y)*abs(eat->y-work->y));
+				if(eat!=work&&tmp<min){
+					min=tmp;
+					work->eatnum=eat->no;
+				}
+			}
+		}
+		min=10000;
+	}
+	usleep(FOOD_TIME);
+	}
+	return (void *)0;	
+}
 
 void *foodmove(void *arg)
 {
 	while(1){
 	struct food *work;
-	for(work=head;work;work=work->next){
+	for(work=head->next;work;work=work->next){
 		int i=rand()%2;
 		int j=rand()%2;
 		if(i==1){			
@@ -86,16 +131,19 @@ void *foodmove(void *arg)
 	return (void *)0;
 			
 }
+
 void *show()
 {
 	while(1){
 		struct food *work;
 		initmap();
-		for(work=head;work;work=work->next)
+		for(work=head->next;work;work=work->next)
 			map[work->x][work->y]=work->n;
 		map[myx][myy]=mynum;
 		printmap();
 		//foodmove();
+		printf("left %d nodes\n",sum);
+		printf("sum=%d\n",sumn);
 		usleep(FRESH_TIME);
 	}
 	return (void *)0;
@@ -111,9 +159,12 @@ void initfood()
 		ne->x=rand()%MAP_X;
 		ne->y=rand()%MAP_Y;
 		ne->n=rand()%(mynum*2)+1;
+		ne->no=i+1;
+		ne->eatnum=0;
 		head_tmp->next=ne;
 		ne->prev=head_tmp;
 		head_tmp=head_tmp->next;
+		sumn+=ne->n;
 	}	
 }
 #define ECHOFLAGS (ECHO | ECHOE | ECHOK | ECHONL)  
@@ -140,7 +191,7 @@ int set_disp_mode(int fd,int option)
 void eat()
 {
 	struct food *work;
-	for(work=head;work;work=work->next){
+	for(work=head->next;work;work=work->next){
 		if(work->x==myx&&work->y==myy&&mynum>=work->n){
 			mynum+=work->n;
 			work->prev->next=work->next;
@@ -176,8 +227,9 @@ int main(void)
 	initfood();
 	pthread_t showtid,movetid;
 	pthread_create(&showtid,NULL,show,NULL);
-	pthread_create(&movetid,NULL,move,NULL);
-	pthread_create(&movetid,NULL,foodmove,NULL);
+	//pthread_create(&movetid,NULL,move,NULL);
+	//pthread_create(&movetid,NULL,foodmove,NULL);
+	pthread_create(&movetid,NULL,findfood,NULL);
 	while(1){};
 	return 0;
 }
