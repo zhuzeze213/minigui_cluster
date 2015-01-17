@@ -40,6 +40,7 @@
 #include "menu.h"
 #include "button.h"
 #include "listbox.h"
+#include "propsheet.h"
 
 char filename[FILE_SIZE];
 static int step = 12;
@@ -181,6 +182,11 @@ static int MainWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam)
 			InvalidateRect (hWnd, NULL, TRUE);
 			break;
 
+			case IDM_HOW_TO:
+			DlgPropSheet.controls = CtrlPropSheet;
+			DialogBoxIndirectParam (&DlgPropSheet, hWnd, PropSheetProc, 0L);
+			break;
+			
 			case IDM_ABOUT:
 			MessageBox(hWnd, VERSION, "Minigui-Cluster", MB_OK | MB_ICONINFORMATION);
 			break;
