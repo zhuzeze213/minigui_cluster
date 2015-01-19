@@ -46,19 +46,19 @@ struct Min_delta_sigma_heap
 	int* H;   // the heap that contains the number of each community
 	int* I;   // the index of each community in the heap (-1 = not stored)
 
-	void (*move_up)(int index);
-	void (*move_down)(int index);
+	void (*move_up)(struct Min_delta_sigma_heap *m,int index);
+	void (*move_down)(struct Min_delta_sigma_heap *m,int index);
 
-	int (*get_max_community)();			    // return the community with the maximal delta_sigma
-	void (*remove_community)(int community);		    // remove a community;
-	void (*update)(int community);			    // update (or insert if necessary) the community
-	long (*memory)();				    // the memory used in Bytes.
-	bool (*is_empty)();
+	int (*get_max_community)(struct Min_delta_sigma_heap m);			    // return the community with the maximal delta_sigma
+	void (*remove_community)(struct Min_delta_sigma_heap *m,int community);		    // remove a community;
+	void (*update)(struct Min_delta_sigma_heap *m,int community);			    // update (or insert if necessary) the community
+	long (*memory)(struct Min_delta_sigma_heap m);				    // the memory used in Bytes.
+	bool (*is_empty)(struct Min_delta_sigma_heap m);
 
 	float* delta_sigma;				     // the delta_sigma of the stored communities
   
-	void (*initmd)(int max_size);
-	void (*destroymd)();
+	void (*initmd)(struct Min_delta_sigma_heap *m,int max_s);
+	void (*destroymd)(struct Min_delta_sigma_heap *m);
 };
 #endif
 
