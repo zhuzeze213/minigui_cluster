@@ -22,7 +22,7 @@ struct Probabilities
 	int* vertices;					    // the vertices corresponding to the stored probabilities, 0 if all the probabilities are stored
 	float* P;	
 	long (*memory)(struct Probabilities p);
-	double (*compute_distance)(struct Probabilities *p,const Probabilities* P2);
+	double (*compute_distance)(struct Probabilities p,const Probabilities* P2);
 	void (*initp)(struct Probabilities *p,int community);
 	void (*initp2)(struct Probabilities *p,int community1,int community2);
 	void (*destroyp)(struct Probabilities *p);
@@ -50,9 +50,9 @@ struct  Community {
 				// -1 if the community is not used
   
   void (*merge)(struct Community *c,struct Community C1, struct Community C2);	// create a new community by merging C1 an C2
-  void (*add_neighbor)(struct Community *c,,struct Neighbor* N);
-  void remove_neighbor(struct Community *c,struct Neighbor* N);
-  float (*min_delta_sigma)();			// compute the minimal delta sigma among all the neighbors of this community
+  void (*add_neighborc)(struct Community *c,,struct Neighbor* N);
+  void (*remove_neighborc)(struct Community *c,struct Neighbor* N);
+  float (*min_delta_sigma)(struct Community c);			// compute the minimal delta sigma among all the neighbors of this community
   
   void (*initc)(struct Community *c);			// create an empty community
   void (*destroy)(struct Community *c);			// destructor
@@ -83,8 +83,8 @@ struct Communities {
   void (*print_best_modularity_partition2)(struct Communities c,int community, bool* max_modularity);
 
   
-  void (*initC)(struct Communities *c,struct Graph* G, int random_walks_length = 3, bool silent = false, int details = 1, long max_memory = -1);    // Constructor
-  void (*destroyC)(struct Communities *c);					// Destructor
+  void (*initC)(struct Communities *c,struct Probabilities *p,struct Graph* G, int random_walks_length = 3, bool silent = false, int details = 1, long max_memory = -1);    // Constructor
+  void (*destroyC)(struct Communities *c,struct Probabilities *p);					// Destructor
 
 
   void (*merge_communities)(struct Communities *c,struct Neighbor* N);			// create a community by merging two existing communities
@@ -93,17 +93,17 @@ struct Communities {
   
   double (*compute_delta_sigma)(int c1, int c2);		// compute delta_sigma(c1,c2) 
 
-  void (*remove_neighbor)(struct Communities *c,struct Neighbor* N);
-  void add_neighbor(struct Communities *c,struct Neighbor* N);
-  void update_neighbor(struct Communities *c,struct Neighbor* N, float new_delta_sigma);
+  void (*remove_neighborC)(struct Communities *c,struct Neighbor* N);
+  void (*add_neighborC)(struct Communities *c,struct Neighbor* N);
+  void (*update_neighbor)(struct Communities *c,struct Neighbor* N, float new_delta_sigma);
 
-  void manage_memory(struct Communities c);
+  void (*manage_memory)(struct Communities *c);
   
-  void print_state(struct Communities c);
-  void print_partition(struct Communities c,int nb_remaining_commities);	// print the partition for a given number of communities
-  void print_community(struct Communities c,int c);				// print a community  
+  void (*print_state)(struct Communities c);
+  void (*print_partition)(struct Communities c,int nb_remaining_commities);	// print the partition for a given number of communities
+  void (*print_community)(struct Communities c,int c);				// print a community  
 };
-
+struct Communities *C;
 
 
 #endif
