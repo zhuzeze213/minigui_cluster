@@ -532,13 +532,332 @@ void add_neighborC(struct Communities *c,struct Neighbor* N)
 }
 
 /*   550  */
+void update_neighbor(struct Communities *c,struct Neighbor* N, float new_delta_sigma)
+{
+	if(c->max_memory !=-1) {
+    if(new_delta_sigma < c->min_delta_sigma->delta_sigma[N->community1]) {
+      c->min_delta_sigma->delta_sigma[N->community1] = new_delta_sigma;
+      if(c->communities[N->community1].P) c->min_delta_sigma->update(c->min_delta_sigma,N->community1);
+    }
+   
+    if(new_delta_sigma < c->min_delta_sigma->delta_sigma[N->community2]) {
+      c->min_delta_sigma->delta_sigma[N->community2] = new_delta_sigma;
+      if(c->communities[N->community2].P) c->min_delta_sigma->update(c->min_delta_sigma,N->community2);
+    }
 
+    float old_delta_sigma = N->delta_sigma;
+    N->delta_sigma = new_delta_sigma;
+    H->update(H,N);
 
+    if(old_delta_sigma == c->min_delta_sigma->delta_sigma[N->community1]) {
+      c->min_delta_sigma->delta_sigma[N->community1] = c->communities[N->community1].min_delta_sigma(c->communities[N->community1]);
+      if(c->communities[N->community1].P) c->min_delta_sigma->update(c->min_delta_sigma,N->community1);
+    }
 
+    if(old_delta_sigma == c->min_delta_sigma->delta_sigma[N->community2]) {
+      c->min_delta_sigma->delta_sigma[N->community2] = c->communities[N->community2].min_delta_sigma(c->communities[N->community2]);
+      if(c->communities[N->community2].P) c->min_delta_sigma->update(c->min_delta_sigma,N->community2);
+    }
+  }
+  else {
+    N->delta_sigma = new_delta_sigma;
+    H->update(H,N);
+  }
+}
 
+void manage_memory(struct Communities *c)
+{
+	 while((c->memory_used > c->max_memory) && !c->min_delta_sigma->is_empty(*(c->min_delta_sigma))) {
+    int C = min_delta_sigma->get_max_community(*min_delta_sigma);
+    free(c->communities[C].P);
+    c->communities[C].P = 0;
+    c->min_delta_sigma->remove_community(c->min_delta_sigma,C);
+  }  
+}
 
+void merge_communities(struct Communities *c,struct Neighbor* merge_N)
+{
+	int c1 = merge_N->community1;
+  int c2 = merge_N->community2;
+  
+  c->communities[nb_communities].first_member = c->communities[c1].first_member;	// merge the 
+  c->communities[nb_communities].last_member = c->communities[c2].last_member;	// two lists   
+  c->members[communities[c1].last_member] = c->communities[c2].first_member;		// of members
 
+  c->communities[nb_communities].size = c->communities[c1].size + communities[c2].size;
+  c->communities[nb_communities].this_community = c->nb_communities;
+  c->communities[nb_communities].sub_community_of = 0;
+  c->communities[nb_communities].sub_communities[0] = c1;
+  c->communities[nb_communities].sub_communities[1] = c2;
+  c->communities[nb_communities].total_weight = c->communities[c1].total_weight + c->communities[c2].total_weight;
+  c->communities[nb_communities].internal_weight = c->communities[c1].internal_weight + c->communities[c2].internal_weight + merge_N->weight;
+  c->communities[nb_communities].sigma = c->communities[c1].sigma + c->communities[c2].sigma + merge_N->delta_sigma;
+  
+  c->communities[c1].sub_community_of = c->nb_communities;
+  c->communities[c2].sub_community_of = c->nb_communities;
 
+// update the new probability vector...
+  
+  if(c->communities[c1].P && c->communities[c2].P) initp2(c->communities[nb_communities].P,c1,c2);
 
+  if(c->communities[c1].P) {
+    free(c->communities[c1].P); 
+    c->communities[c1].P = 0;
+    if(c->max_memory != -1) c->min_delta_sigma->remove_community(c->min_delta_sigma,c1);
+  }
+  if(c->communities[c2].P) {
+    free(c->communities[c2].P);
+    c->communities[c2].P = 0;
+    if(c->max_memory != -1) c->min_delta_sigma->remove_community(c->min_delta_sigma,c2);
+  }
+
+  if(c->min_delta_sigmamax_memory != -1) {
+    c->min_delta_sigmamin_delta_sigma->delta_sigma[c1] = -1.;		    // to avoid to update the min_delta_sigma for these communities
+    c->min_delta_sigmamin_delta_sigma->delta_sigma[c2] = -1.;		    // 
+    c->min_delta_sigmamin_delta_sigma->delta_sigma[c->nb_communities] = -1.;
+  }
+  
+// update the new neighbors
+// by enumerating all the neighbors of c1 and c2
+
+  Neighbor* N1 = c->min_delta_sigmacommunities[c1].first_neighbor;
+  Neighbor* N2 = c->min_delta_sigmacommunities[c2].first_neighbor;
+
+  while(N1 && N2) { 
+    int neighbor_community1;
+    int neighbor_community2;
+    
+    if (N1->community1 == c1) neighbor_community1 = N1->community2;
+    else neighbor_community1 = N1->community1;
+    if (N2->community1 == c2) neighbor_community2 = N2->community2;
+    else neighbor_community2 = N2->community1;
+
+    if (neighbor_community1 < neighbor_community2) {
+      Neighbor* tmp = N1;
+      if (N1->community1 == c1) N1 = N1->next_community1;
+      else N1 = N1->next_community2;
+      c->remove_neighborC(tmp);
+	  Neighbor* N;
+      initn(N);
+      N->weight = tmp->weight;
+      N->community1 = neighbor_community1;
+      N->community2 = c->nb_communities;
+      N->delta_sigma = ((double)(c->communities[c1].size+c->communities[neighbor_community1].size)*tmp->delta_sigma + (double)(c->communities[c2].size)*merge_N->delta_sigma)/((double)(c->communities[c1].size+c->communities[c2].size+c->communities[neighbor_community1].size));//compute_delta_sigma(neighbor_community1, nb_communities);
+      N->exact = false;
+      free(tmp);
+      c->add_neighborC(c,N); 
+    }
+    
+    if (neighbor_community2 < neighbor_community1) {
+      Neighbor* tmp = N2;
+      if (N2->community1 == c2) N2 = N2->next_community1;
+      else N2 = N2->next_community2;
+      c->remove_neighborC(tmp);
+      Neighbor* N = new Neighbor;
+      N->weight = tmp->weight;
+      N->community1 = neighbor_community2;
+      N->community2 = c->nb_communities;
+      N->delta_sigma = ((double)(c->communities[c1].size)*merge_N->delta_sigma + (double)(c->communities[c2].size+c->communities[neighbor_community2].size)*tmp->delta_sigma)/((double)(c->communities[c1].size+c->communities[c2].size+c->communities[neighbor_community2].size));//compute_delta_sigma(neighbor_community2, nb_communities);
+      N->exact = false;
+      free(tmp);
+      c->add_neighborC(c,N); 
+    }
+    
+    if (neighbor_community1 == neighbor_community2) {
+      Neighbor* tmp1 = N1;
+      Neighbor* tmp2 = N2;
+      bool exact = N1->exact && N2->exact;
+      if (N1->community1 == c1) N1 = N1->next_community1;
+      else N1 = N1->next_community2;
+      if (N2->community1 == c2) N2 = N2->next_community1;
+      else N2 = N2->next_community2;
+      c->remove_neighborC(c,tmp1);
+      c->remove_neighborC(c,tmp2);
+      Neighbor* N;
+	  initn(N);
+      N->weight = tmp1->weight + tmp2->weight;
+      N->community1 = neighbor_community1;
+      N->community2 = c->nb_communities;
+      N->delta_sigma = ((double)(c->communities[c1].size+c->communities[neighbor_community1].size)*tmp1->delta_sigma + (double)(c->communities[c2].size+c->communities[neighbor_community1].size)*tmp2->delta_sigma - (double)(c->communities[neighbor_community1].size)*merge_N->delta_sigma)/(double)(c->communities[c1].size+c->communities[c2].size+c->communities[neighbor_community1].size));
+      N->exact = exact;
+      free(tmp1);
+	  free(tmp2);
+      c->add_neighborC(c,N);
+    }
+  }
+
+  
+  if(!N1) {
+    while(N2) {
+//      double delta_sigma2 = N2->delta_sigma;
+      int neighbor_community;
+      if (N2->community1 == c2) neighbor_community = N2->community2;
+      else neighbor_community = N2->community1;
+      Neighbor* tmp = N2;
+      if (N2->community1 == c2) N2 = N2->next_community1;
+      else N2 = N2->next_community2;
+      c->remove_neighborC(c,tmp);
+      Neighbor* N;
+	  initn(N);
+      N->weight = tmp->weight;
+      N->community1 = neighbor_community;
+      N->community2 = c->nb_communities;
+      N->delta_sigma = ((double)(c->communities[c1].size)*merge_N->delta_sigma + (double)(c->communities[c2].size+c->communities[neighbor_community].size)*tmp->delta_sigma)/((double)(c->communities[c1].size+c->communities[c2].size+c->communities[neighbor_community].size));//compute_delta_sigma(neighbor_community, nb_communities);
+      N->exact = false;
+      free(tmp);
+      c->add_neighborC(c,N);
+    }
+  }
+  if(!N2) {
+    while(N1) {
+//      double delta_sigma1 = N1->delta_sigma;
+      int neighbor_community;
+      if (N1->community1 == c1) neighbor_community = N1->community2;
+      else neighbor_community = N1->community1;
+      Neighbor* tmp = N1;
+      if (N1->community1 == c1) N1 = N1->next_community1;
+      else N1 = N1->next_community2;
+      c->remove_neighborC(c,tmp);
+      Neighbor* N;
+	  initn(N);
+      N->weight = tmp->weight;
+      N->community1 = neighbor_community;
+      N->community2 = c->nb_communities;
+      N->delta_sigma = ((double)(c->communities[c1].size+c->communities[neighbor_community].size)*tmp->delta_sigma + (double)(c->communities[c2].size)*merge_N->delta_sigma)/((double)(c->communities[c1].size+c->communities[c2].size+c->communities[neighbor_community].size));//compute_delta_sigma(neighbor_community, nb_communities);
+      N->exact = false;
+	  free(tmp);
+      c->add_neighbor(c,N);
+    }
+  }
+
+  if(c->max_memory != -1) {
+    c->min_delta_sigma->delta_sigma[nb_communities] = c->communities[nb_communities].min_delta_sigma(c->communities[nb_communities]);
+    c->min_delta_sigma->update(c->min_delta_sigma,nb_communities);
+  } 
+
+  c->nb_communities++;
+  c->nb_active_communities--;
+}
+
+double merge_nearest_communities(struct Communities *c)
+{
+	Neighbor* N = H->get_first(*H);  
+  while(!N->exact) {
+    c->update_neighbor(c,N, c->compute_delta_sigma(c,N->community1, N->community2));
+    N->exact = true;
+    N = H->get_first(*H);
+    if(c->max_memory != -1) c->manage_memory(*c);
+  }
+
+  double d = N->delta_sigma;
+  c->remove_neighborC(c,N);
+
+  c->merge_communities(c,N);
+  if(c->max_memory != -1) c->manage_memory(*c);
+
+  if(details >= 2) printf("Partition %d ( %d communities) \n",nb_communities - c->G->nb_vertices,2*c->G->nb_vertices - nb_communities);
+
+  if(details >= 2) printf("community %d + community %d --> community %d \n",N->community1,N->community2,nb_communities);
+
+  if(details >= 3) {
+  float Q = 0.;
+  for(int i = 0; i < c->nb_communities; i++)
+    if(c->communities[i].sub_community_of == 0) 
+      Q += (c->communities[i].internal_weight - c->communities[i].total_weight*c->communities[i].total_weight/c->G->total_weight)/c->G->total_weight;
+  printf("Q = %f  #  delta_sigma =  %lf\n",Q,d); 
+  }
+
+  if(details == 4) c->print_community(*c,c->nb_communities-1);
+  if(details >= 5) c->print_partition(2*c->G->nb_vertices - c->nb_communities); 
+  if(details >= 2) printf("\n");
+  free(N);
+
+  if(!silent) {
+    for(int k = (500*(c->G->nb_vertices - c->nb_active_communities - 1))/(c->G->nb_vertices-1) + 1; k <= (500*(c->G->nb_vertices - c->nb_active_communities))/(c->G->nb_vertices-1); k++) {
+      if(k % 50 == 1) {printf("\n%d%%",k/5);}
+      printf(".");
+    }
+  }
+  return d;
+}
+
+double compute_delta_sigma(struct Communities *c,int community1, int community2)
+{
+	if(!c->communities[community1].P) {
+    initp(c->communities[community1].P,community1);
+    if(c->max_memory != -1) c->min_delta_sigma->update(c->min_delta_sigma,community1);
+  }
+  if(!c->communities[community2].P) {
+    initp(c->communities[community2].P,community2);
+    if(c->max_memory != -1) c->min_delta_sigma->update(c->min_delta_sigma,community2);
+  }
+  
+  return c->communities[community1].P->compute_distance(*(c->communities[community1].P),c->communities[community2].P)*(double)(c->communities[community1].size)*(double)(c->communities[community2].size)/(double)(c->communities[community1].size + c->communities[community2].size);
+}
+
+void print_community(struct Communities C,int c)
+{
+	printf("community %d = {",c);
+  for(int m = C.communities[c].first_member; m != C.members[C.communities[c].last_member]; m = C.members[m]) {
+    if(G->index) printf("%d",G->index[m])
+    else printf("%d",m);
+    if(C.members[m] != C.members[C.communities[c].last_member]) printf(", ");
+  }
+ printf("}\n");
+}
+
+void print_state(struct Communities C)
+{
+	 printf("number of communities : %d\n",C.nb_active_communities);
+  for(int c = 0; c < c.nb_communities; c++)
+    if(C.communities[c].sub_community_of == 0) 
+      C.print_community(C,c);
+}
+
+void print_partition(struct Communities C,int nb_remaining_commities)
+{
+	int last_community = 2*C.G->nb_vertices - C.nb_remaining_commities - 1;
+  printf("Partition %d (%d communities)\n",G->nb_vertices - nb_remaining_commities,nb_remaining_commities);
+  for(int c = 0; c <= last_community; c++)
+    if((C.communities[c].sub_community_of == 0) || (C.communities[c].sub_community_of > C.last_community))
+      C.print_community(C,c);
+}
+
+float find_best_modularity(struct Communities c,int community, bool* max_modularity)
+{
+	float Q = (c.communities[community].internal_weight - c.communities[community].total_weight*c.communities[community].total_weight/c.G->total_weight)/c.G->total_weight;
+  if(c.communities[community].sub_communities[0] == -1) {
+    max_modularity[community] = true;
+    return Q;
+  }
+  float Q2 = c.find_best_modularity(c.communities[community].sub_communities[0], max_modularity) + find_best_modularity(c.communities[community].sub_communities[1], max_modularity);
+  if(Q2 > Q) {
+    max_modularity[community] = false;
+    return Q2;
+  }
+  else {
+    max_modularity[community] = true;
+    return Q;
+  }
+}
+
+void print_best_modularity_partition)(struct Communities c)
+{
+	bool* max_modularity =(bool *)malloc(sizeof(bool)*nb_communities);
+  float Q = c.find_best_modularity(c,nb_communities-1, max_modularity);
+  printf("Maximal modularity Q = %f for partition :\n",Q);
+  c.print_best_modularity_partition(c,c->nb_communities-1, max_modularity);
+  free(max_modularity);
+}
+
+void print_best_modularity_partition2(struct Communities c,int community, bool* max_modularity)
+{
+	  if(max_modularity[community]) 
+    c.print_community(c,community);
+  else {
+    c.print_best_modularity_partition(c,c.communities[community].sub_communities[0], max_modularity);
+    c.print_best_modularity_partition(c,c.communities[community].sub_communities[1], max_modularity);
+  }
+}
 
 

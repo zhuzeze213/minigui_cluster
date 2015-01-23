@@ -87,11 +87,11 @@ struct Communities {
   void (*destroyC)(struct Communities *c,struct Probabilities *p);					// Destructor
 
 
-  void (*merge_communities)(struct Communities *c,struct Neighbor* N);			// create a community by merging two existing communities
+  void (*merge_communities)(struct Communities *c,struct Neighbor* merge_N);			// create a community by merging two existing communities
   double (*merge_nearest_communities)(struct Communities *c);
 
   
-  double (*compute_delta_sigma)(int c1, int c2);		// compute delta_sigma(c1,c2) 
+  double (*compute_delta_sigma)(struct Communities *c,int c1, int c2);		// compute delta_sigma(c1,c2) 
 
   void (*remove_neighborC)(struct Communities *c,struct Neighbor* N);
   void (*add_neighborC)(struct Communities *c,struct Neighbor* N);
