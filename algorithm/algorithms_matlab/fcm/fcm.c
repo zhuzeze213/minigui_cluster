@@ -131,6 +131,7 @@ void fcm(int **data,int cluster_n,double options[],int row,int column)
 	print_2_matrix_double(center,cluster_n,data_n);
 	printf("\nU:\n");
 	print_2_matrix_double(U,cluster_n,data_n);
+	print_2_matrix_double_f(U,cluster_n,data_n,TMPFILE);
 	int max_index=0;double max_num=0.0;int j;
 	int *community=init_matrix(data_n);
 	for(i=0;i<data_n;i++){

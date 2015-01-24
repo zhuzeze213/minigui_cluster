@@ -31,7 +31,7 @@
 #define YE_POWER 0
 
 #define BUFFERSIZE 4096
-
+#define TMPFILE "../tmp/fcm.txt"
 struct network
 {
 	int **adj;
@@ -80,6 +80,8 @@ double **matrix_operate_double(double **pri,double **beh,char ope,int row,int co
 double **matrix_operate_double_int_1(int **pri,double **beh,char ope,int row,int column);
 double **matrix_multiply(double **pri,double **beh,int row1,int column1,int row2,int column2);
 double **matrix_multiply_int_2(double **pri,int **beh,int row1,int column1,int row2,int column2);
+void print_2_matrix_double_f(double **adj,int row,int column,char *filename);
+
 
 
 #endif

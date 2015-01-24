@@ -154,6 +154,37 @@ void print_2_matrix_double(double **adj,int row,int column)
 	}
 	printf("\n");
 }
+
+void print_2_matrix_double_f(double **adj,int row,int column,char *filename)
+{
+	int i,j;
+	if(!adj) printf("adj is null\n");
+	FILE *fp=fopen(filename,"w");
+	fprintf(fp,"%d %d\n",row,column);
+	for(i=0;i<row;i++){
+		for(j=0;j<column;j++)
+			fprintf(fp,"%f ",adj[i][j]);
+		fprintf(fp,"\n");
+	}
+	fprintf(fp,"\n");
+	fclose(fp);
+}
+
+double **get_2_matrix_double_f(char *filename)
+{
+	int i,j;
+	
+	FILE *fp=fopen(filename,"r");
+	int row,column;
+	fscanf(fp,"%d %d",&row,&column);
+	double **adj=init_2_matrix_double(row,column);
+	for(i=0;i<row;i++){
+		for(j=0;j<column;j++)
+			fscanf(fp,"%f",&(adj[i][j]));
+	}
+	fclose(fp);
+	return adj;
+}
 int init_network(struct network *network,int row,int column,int node,int edge,BOOL direct,BOOL power)
 {
 	if(network){

@@ -1,4 +1,18 @@
 #include "mystd.h"
+void print_2_matrix_double_f(double **adj,int row,int column,char *filename)
+{
+	int i,j;
+	if(!adj) printf("adj is null\n");
+	FILE *fp=fopen(filename,"w");
+	fprintf(fp,"%d %d\n",row,column);
+	for(i=0;i<row;i++){
+		for(j=0;j<column;j++)
+			fprintf(fp,"%f ",adj[i][j]);
+		fprintf(fp,"\n");
+	}
+	fprintf(fp,"\n");
+	fclose(fp);
+}
 
 int *init_matrix(int num)
 {

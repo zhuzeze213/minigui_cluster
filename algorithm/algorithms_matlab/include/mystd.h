@@ -86,6 +86,8 @@ void print_matrix(int *adj,int length);
 void print_matrix_double(double *adj,int length);
 void print_2_matrix(int **adj,int row,int column);
 void print_2_matrix_double(double **adj,int row,int column);
+void print_2_matrix_double_f(double **adj,int row,int column,char *filename);
+double **get_2_matrix_double_f(char *filename);
 
 int **loadmatrix(char *filename,struct network *network);
 double **loadmatrix_double(char *filename,struct network_double *network);
@@ -136,6 +138,6 @@ double **inv(int **adj,int row,int column);
 int find_num(int *adj,int length,int num);
 int erase_line_matrix(int **adj,int index,int length);
 int erase_line_2_matrix(int ***adj,int num,int index,int row,int column);
-
+int eejcb(double a[],int n,double v[],double eps,int jt);
 #endif
 
