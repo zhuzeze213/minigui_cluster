@@ -174,7 +174,10 @@ static void file_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
         	if (cur_sel >= 0) {
 			SendMessage (hwnd, LB_GETTEXT, cur_sel, (LPARAM)file);
 		}
-		MessageBox (hwnd, file, looking_files_, MB_OK | MB_ICONINFORMATION);
+		//MessageBox (hwnd, file, looking_files_, MB_OK | MB_ICONINFORMATION);
+		strcpy(choose_file,file);
+		DlgBoxInputChar.controls = CtrlInputChar;
+		DialogBoxIndirectParam (&DlgBoxInputChar, hwnd, InputCharDialogBoxProc, 0L);
 	}
 }
 
@@ -190,9 +193,10 @@ static void prompt (HWND hDlg)
             SendDlgItemMessage (hDlg, IDL_FILE, LB_GETTEXT, i, (LPARAM)file);
 	    strcat (files, file);
 	    strcat (files, "\n");
+	    strcpy(choose_file,file);
 	}
     }
-
+	
     MessageBox (hDlg, files, looking_files_, MB_OK | MB_ICONINFORMATION);
 
 }
@@ -213,6 +217,9 @@ int DelFilesBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
         switch (wParam) {
         case IDOK:
             prompt (hDlg);
+	    DlgBoxInputChar.controls = CtrlInputChar;
+	    DialogBoxIndirectParam (&DlgBoxInputChar, hDlg, InputCharDialogBoxProc, 0L);
+	    break;
         case IDCANCEL:
             EndDialog (hDlg, wParam);
             break;
