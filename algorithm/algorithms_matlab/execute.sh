@@ -50,5 +50,16 @@ make
 mv isodata ../bin
 make clean
 
+cd ../A_cut
+make
+mv acut ../bin
+make clean
+
+cd ../N_cut
+make
+mv ncut ../bin
+make clean
+
+
 cd ../lib
 rm *.o
