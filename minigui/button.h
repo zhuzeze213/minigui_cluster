@@ -2,6 +2,7 @@
 #define BUTTON_H
 
 #include "menu.h"
+
 #define  OK                                                                    "OK"
 #define  Cancel                                                                "Cancel"
 #define IDC_PROMPT              200

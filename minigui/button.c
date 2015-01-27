@@ -7,8 +7,10 @@
 #include <minigui/window.h>
 #include <minigui/control.h>
 
-
+#include "myarg.h"
 #include "button.h"
+#include "combobox.h"
+
 char* prompts [] = {
     "",
     "include gn,fcm,fec!",
@@ -92,6 +94,7 @@ static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
 {
     if (nc == BN_CLICKED) {
         SetWindowText (GetDlgItem (GetParent (hwnd), IDC_PROMPT), prompts [id]);
+	kind_of_algorithm=id;
 	//printf("%d\n",id);
     }
 
@@ -111,6 +114,9 @@ int DialogBoxProc2 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
     case MSG_COMMAND:
         switch (wParam) {
         case IDOK:
+		DlgMyDate.controls = CtrlMyDate;  
+		DialogBoxIndirectParam (&DlgMyDate, hDlg, MyDateBoxProc, 0L);
+		break;
         case IDCANCEL:
             EndDialog (hDlg, wParam);
             break;

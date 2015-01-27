@@ -7,4 +7,6 @@
 #define LINE_SIZE 20
 #define NUM_RIGHT_BUTTON 7
 
+int kind_of_algorithm;
+int choose_algorithm;
 #endif
