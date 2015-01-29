@@ -18,6 +18,8 @@
 #define ERROR -1
 #define DONE 1
 #define RAND 0.1234567
+
+#define OUT_OF_RANGE -2
 void print_matrix_double(double *adj,int length)
 {
 	int i;

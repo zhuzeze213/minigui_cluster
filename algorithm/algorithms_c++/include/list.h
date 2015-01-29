@@ -378,7 +378,7 @@ static inline void list_splice_tail_init(struct list_head *list,
 /**
  * list_for_each_entry	-	iterate over list of given type
  * @pos:	the type * to use as a loop cursor.
- * @head:	the head for your list.
+ * @head:	the head for your list.is a pointer
  * @member:	the name of the list_head within the struct.
  */
 #define list_for_each_entry(pos, head, member)				\
