@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include <string.h>
 #include <minigui/common.h>
 #include <minigui/minigui.h>
 #include <minigui/gdi.h>
@@ -9,6 +9,7 @@
 
 #include "combobox.h"
 #include "myarg.h"
+#include "progressbar.h"
 
 #define IDC_HOUR   100
 #define IDL_DAXIA  200
@@ -102,7 +103,7 @@ static void daxia_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
 
 static void prompt (HWND hDlg)
 {
-    int hour = SendDlgItemMessage(hDlg, IDC_HOUR, CB_GETSPINVALUE, 0, 0);
+    modules = SendDlgItemMessage(hDlg, IDC_HOUR, CB_GETSPINVALUE, 0, 0);
     int sel = SendDlgItemMessage(hDlg, IDL_DAXIA, CB_GETCURSEL, 0, 0);    
 }
 
@@ -113,7 +114,7 @@ int MyDateBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
     case MSG_INITDIALOG:
         SendDlgItemMessage(hDlg, IDC_HOUR, CB_SETSPINFORMAT, 0, (LPARAM)"%02d");
         SendDlgItemMessage(hDlg, IDC_HOUR, CB_SETSPINRANGE, 0, 23);
-        SendDlgItemMessage(hDlg, IDC_HOUR, CB_SETSPINVALUE, 20, 0);
+        //SendDlgItemMessage(hDlg, IDC_HOUR, CB_SETSPINVALUE, 20, 0);
         SendDlgItemMessage(hDlg, IDC_HOUR, CB_SETSPINPACE, 1, 1);
 	if(kind_of_algorithm==IDM_OPTIMIZATION){
         	for (i = 0; i < 8; i++) {
@@ -139,8 +140,17 @@ int MyDateBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
         
     case MSG_COMMAND:
         switch (wParam) {
-        case IDOK:
-            //prompt (hDlg);
+        case IDOK:{
+            prompt (hDlg);
+            char tmp[1024];
+	    GetWindowText(GetDlgItem (hDlg, IDL_DAXIA),tmp,1024);
+            strcpy(choose_algorithm,tmp);
+	   
+	    //printf("%d\n",modules);
+	    CreateProgressBar (hDlg);
+	    break;
+	}
+	    
         case IDCANCEL:
             EndDialog (hDlg, wParam);
             break;

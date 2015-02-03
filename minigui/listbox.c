@@ -1,6 +1,6 @@
 
 #include "listbox.h"
-
+#include "myarg.h"
 
 DLGTEMPLATE DlgDelFiles =
 {

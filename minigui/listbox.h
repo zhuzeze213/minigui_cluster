@@ -40,7 +40,7 @@ CTRLDATA CtrlDelFiles[7];
 
 DLGTEMPLATE DlgSetPath;
 CTRLDATA CtrlSetPath[8];
-char cd[MAX_PATH+1];
+
 
 int DelFilesBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam);
 int SetPathBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam);
@@ -48,7 +48,7 @@ int SetPathBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam);
 DLGTEMPLATE DlgBoxInputChar;
 CTRLDATA CtrlInputChar [1];
 int InputCharDialogBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam);
-char choose_file[1024];
+
 #define IDC_CHARS       140
 
 #endif

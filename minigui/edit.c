@@ -4,7 +4,7 @@
 #include <minigui/window.h>
 #include <minigui/control.h>
 #include "listbox.h"
-
+#include "myarg.h"
 DLGTEMPLATE DlgBoxInputChar =
 {
     WS_BORDER | WS_CAPTION |  WS_CHILD, 

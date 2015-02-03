@@ -1,7 +1,7 @@
 LIB=-lpthread -lminigui_ths -ljpeg -lpng -lz -lm -ldl
 CC=gcc
 CFLAGS=-c
-OBJS=main.o menu.o button.o listbox.o setpath.o propsheet.o edit.o combobox.o
+OBJS=main.o menu.o button.o listbox.o setpath.o propsheet.o edit.o combobox.o progressbar.o
 
 main:$(OBJS)
 	$(CC) $(OBJS) $(LIB) -o main
@@ -9,16 +9,19 @@ main:$(OBJS)
 button.o:button.c button.h combobox.h myarg.h
 	$(CC) $(CFLAGS) button.c -o button.o
 
-listbox.o:listbox.c listbox.h
+listbox.o:listbox.c listbox.h myarg.h
 	$(CC) $(CFLAGS) listbox.c -o listbox.o
 
-combobox.o:combobox.c combobox.h myarg.h
+progressbar.o:progressbar.c progressbar.h
+	$(CC) $(CFLAGS) progressbar.c -o progressbar.o
+	
+combobox.o:combobox.c combobox.h myarg.h progressbar.h
 	$(CC) $(CFLAGS) combobox.c -o combobox.o
 	
-edit.o:edit.c listbox.h
+edit.o:edit.c listbox.h myarg.h
 	$(CC) $(CFLAGS) edit.c -o edit.o
 	
-setpath.o:setpath.c listbox.h
+setpath.o:setpath.c listbox.h myarg.h
 	$(CC) $(CFLAGS) setpath.c -o setpath.o
 	
 menu.o:menu.c menu.h

@@ -81,19 +81,15 @@ static void destroyProgressWin (HWND hwnd)
     MainWindowThreadCleanup (hwnd);
 }
 
-int MiniGUIMain (int argc, const char* argv[])
+int CreateProgressBar (HWND hWnd)
 {
     int i, sum;
     HCURSOR hOldCursor;
     HWND hwnd;
 
-#ifdef _MGRM_PROCESSES
-    JoinLayer(NAME_DEF_LAYER , "progressbar" , 0 , 0);
-#endif
-
     hOldCursor = SetDefaultCursor (GetSystemCursor (IDC_WAIT));
 
-    hwnd = createProgressWin (HWND_DESKTOP, progress_bar,
+    hwnd = createProgressWin (hWnd, progress_bar,
 	    calculating_please_waiting, 100, 2000);
     while (HavePendingMessage (hwnd)) {
          MSG msg;

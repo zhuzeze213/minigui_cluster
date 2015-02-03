@@ -8,5 +8,11 @@
 #define NUM_RIGHT_BUTTON 7
 
 int kind_of_algorithm;
-int choose_algorithm;
+char choose_algorithm[1024];
+int modules;
+char *result_path;
+char cd[MAX_PATH+1];
+char choose_file[1024];
+
+
 #endif
