@@ -3,6 +3,7 @@
 #include "list.h"
 #include "general.h"
 
+struct deque_struct;
 struct deque_operate
 {
 	void    (*assign_scope)       (struct deque_struct *deque,int beg,int end);
@@ -50,108 +51,118 @@ struct deque_struct
 	struct deque_operate *ope;
 };
 
-void _init(struct deque_struct *h,int num)
+void _initd(struct deque_struct *h,int num)
 {
-	if(!head) h=(struct deque_struct *)malloc(sizeof(struct deque_struct));
+	if(!h) h=(struct deque_struct *)malloc(sizeof(struct deque_struct));
 	INIT_LIST_HEAD(&(h->list));
-	h->head=h;
+	h->head=&h->list;
 	int i;
 	for(i=0;i<num;i++){
 		struct deque_struct *n=(struct deque_struct *)malloc(sizeof(struct deque_struct));
 		list_add(&(n->list),&(h->list));
-		n->head=h;
+		n->head=&h->list;
 	}	
 }
 
 void assign_scope(struct deque_struct *h,int beg,int end)
 {
-	int num=end-beg;
-	_init(h,num);
+	int num=end-beg+1;
+	_initd(h,num);
 	struct deque_struct *pos;
 	int i=beg;
 	list_for_each_entry(pos, h->head, list){
-		pos->data=(int *)malloc(sizeof(int));
-		*(pos->data)=i;
+		pos->data=malloc(sizeof(int));
+		*((int *)pos->data)=i;
 		i++;
 	}		
 }
 
-#define assign_repeated(h,n,elem,type) ({ \
-	_init(h,n);                    \
+#define assign_repeated(h,n,elem,type,num) ({ \
+	_initd((h),n);                    \
 	struct deque_struct *pos;        \
 	list_for_each_entry(pos, (h)->head, list){    \
-		pos->data=(void *)malloc(sizeof(type)); \
-		memcpy(pos->data,(void *)&elem,sizeof(type));  \
+		pos->data=malloc(sizeof(type)*(num)); \
+		memcpy(pos->data,(void *)(elem),sizeof(type)*(num));  \
 	}                                   })                                         
                                               
-void *at(struct deque_struct h,int idx)
-{
-	struct deque_struct *pos;
-	list_for_each_entry(pos, h.head, list){
-		idx--;
-		if(idx<0) break;
-	}
-	if(idx>=0) return OUT_OF_RANGE;
-	else return pos->data;		
-}
-
-void *back(struct deque_struct h)
-{
-	return list_entry((h.head)->prev,struct deque_struct,list)->data;
-}
-
-void *front(struct deque_struct h)
-{
-	return list_entry((h.head)->next,struct deque_struct,list)->data;
-}
-/*Attention! if CLEAR all memory should alloc again(use _init) !*/
-void clear(struct deque_struct *h)
+void *at(struct deque_struct const *h,int idx)
 {
 	struct deque_struct *pos;
 	list_for_each_entry(pos, h->head, list){
-		free(list_entry(pos->list.prev,struct deque_struct,list);
+		idx--;
+		if(idx<0) break;
 	}
+	if(idx>=0) return (void *)OUT_OF_RANGE;
+	else return pos->data;		
 }
 
-int size(struct deque_struct h)
+void *back(struct deque_struct const *h)
+{
+	return list_entry((h->head)->prev,struct deque_struct,list)->data;
+}
+
+void *front(struct deque_struct const *h)
+{
+	return list_entry((h->head)->next,struct deque_struct,list)->data;
+}
+/*Attention! if CLEAR all memory should alloc again(use _initd) !*/
+void clear(struct deque_struct *h)
+{
+	struct deque_struct *pos;
+	int flag=1;
+	list_for_each_entry(pos, h->head, list){
+		if(flag) flag=0;
+		else{
+			free(list_entry(pos->list.prev,struct deque_struct,list)->data);
+			free(list_entry(pos->list.prev,struct deque_struct,list));
+		
+		}
+	}
+	free(list_entry((h->head)->prev,struct deque_struct,list)->data);
+	free(list_entry((h->head)->prev,struct deque_struct,list));
+	h->head->prev=h->head;
+	h->head->next=h->head;
+}
+
+int size(struct deque_struct const *h)
 {
 	struct deque_struct *pos;
 	int ret=0;
-	list_for_each_entry(pos, h.head, list){
+	list_for_each_entry(pos, h->head, list){
 		ret++;
 	}
 	return ret;
 }
-#define copy(h,old,type) ({                                       \
-	_init((h),size(old));                                           \
-	struct deque_struct tmp=old,*pos;                                  \
+#define copy(h,old,type,num) ({                                       \
+	_initd((h),size(old));                                           \
+	struct deque_struct *tmp=(old),*pos;                                  \
 	list_for_each_entry(pos, (h)->head, list){                      \
-		tmp=*(list_entry(tmp.list.next, struct deque_struct, list));  \
-		h->data=(void *)malloc(sizeof(type));                          \
-		memcpy(pos->data,tmp.data,sizeof(type));  \
+		tmp=list_entry(tmp->list.next, struct deque_struct, list);  \
+		pos->data=malloc(sizeof(type)*(num));                          \
+		memcpy(pos->data,tmp->data,sizeof(type)*(num));  \
 	}                    })                      
 
 
 void init_n(struct deque_struct *h,int n)
 {
-	_init(h,n);
+	_initd(h,n);
 }
 
-int empty(struct deque_struct *h)
+int empty(struct  deque_struct const *h)
 {
 	if(list_entry(h->list.next, struct deque_struct, list)==h)
 		return 1;
 	else return 0;
 }
 
-struct  list_head *begin(struct deque_struct h)
+struct  list_head *begin(struct deque_struct const *h)
 {
-	return h.list.next;
+	return h->list.next;
 }
 
-struct  list_head *end(struct deque_struct h)
+struct  list_head *end(struct deque_struct const *h)
 {
-	return h.list.prev;
+	return h->list.prev;
 }
 struct  list_head *erase_pos(struct deque_struct *h,int p)
 {
@@ -159,8 +170,8 @@ struct  list_head *erase_pos(struct deque_struct *h,int p)
 	list_for_each_entry(pos, h->head, list){
 		p--;
 		if(p<0){
-			save=*pos;
-			list_del(&pos->list)
+			memcpy(&save,pos,sizeof(struct deque_struct));
+			list_del(&pos->list);
 			break;
 		}
 	}
@@ -174,39 +185,39 @@ struct list_head *erase_scope(struct deque_struct *h,int beg,int end)
 	list_for_each_entry(pos, h->head, list){
 		if(count>=beg&&count<end)
 			list_del(&pos->list);					
-		if(count==end){
-			save=*pos;	
+		if(count==end-1){
+			memcpy(&save,pos,sizeof(struct deque_struct));	
 			break;
 		}
 		count++;
 	}
-	return save->next;
+	return save.list.next;
 }
 
-#define insert_pos(h,p,elem,type)  ({           \
+#define insert_pos(h,p,elem,type,num)  ({           \
 	struct deque_struct *pos;                   \
-	list_for_each_entry(pos, h->head, list){     \
+	list_for_each_entry(pos, (h)->head, list){     \
 		p--;                                    \
 		if(p<0) break;                          \
 	}                                           \
 	struct deque_struct *n=(struct deque_struct *)malloc(sizeof(struct deque_struct)); \
-	n->data=(void *)malloc(sizeof(type));       \
-	memcpy(pos->data,(void *)&elem,sizeof(type));  \
+	n->data=malloc(sizeof(type)*(num));       \
+	memcpy(n->data,(void *)elem,sizeof(type)*(num));  \
 	__list_add(&n->list,pos->list.prev,&pos->list);   })
 
 
-#define insert_pos_repeated(h,p,n,elem,type,i)   ({	\
+#define insert_pos_repeated(h,p,n,elem,type,i,num)   ({	\
 	struct deque_struct *pos;                   \
-	list_for_each_entry(pos, h->head, list){     \
+	list_for_each_entry(pos, (h)->head, list){     \
 		p--;                                    \
 		if(p<0) break;                          \
 	}                                           \
 	for(i=0;i<n;i++){                           \
 		struct deque_struct *ne=(struct deque_struct *)malloc(sizeof(struct deque_struct)); \
-		ne->data=(void *)malloc(sizeof(type));       \
-		memcpy(pos->data,(void *)&elem,sizeof(type));  \
+		ne->data=(void *)malloc(sizeof(type)*(num));       \
+		memcpy(ne->data,(void *)elem,sizeof(type)*(num));  \
 		__list_add(&ne->list,pos->list.prev,&pos->list);     \
-		pos=list_next_entry(pos, list)                       \
+		pos=list_prev_entry(pos, list);                       \
 	}                       })
 		                                          
 void insert_pos_scope(struct deque_struct *h,int p,int beg,int end)
@@ -219,10 +230,10 @@ void insert_pos_scope(struct deque_struct *h,int p,int beg,int end)
 	int i;
 	for(i=beg;i<end;i++){
 		struct deque_struct *n=(struct deque_struct *)malloc(sizeof(struct deque_struct));
-		n->data=(int *)malloc(sizeof(int));
-		*(n->data)=i;
+		n->data=malloc(sizeof(int));
+		*((int *)n->data)=i;
 		n->head=h->head;
-		__list_add(&n->list,pos->list.prev,&pos->list);
+		__list_add(&n->list,pos->prev,pos);
 	}
 }
 
@@ -234,17 +245,19 @@ int max_size()
 					
 void pop_back(struct deque_struct *h)
 {
-	free(list_last_entry(h->list, struct deque_struct, list));
+	list_del(h->list.prev);
 }
 void pop_front(struct deque_struct *h)
 {
-	free(list_first_entry(h->list, struct deque_struct, list));
+	list_del(h->list.next);
 }
-#define push_back(h,elem,type)    \
-	insert_pos(h,0,elem,type); 
+#define push_front(h,p,elem,type,num)  ({  \
+	p=0;                            \
+	insert_pos(h,p,elem,type,num);    })  
 
-#define push_front(h,elem,type)		\
-	insert_pos(h,size(*h)-1,elem,type);
+#define push_back(h,p,elem,type,num)	({	\
+	p=size(h);                          \
+	insert_pos(h,p,elem,type,num);       })
 	
 void swap(struct deque_struct *n,struct deque_struct *old)
 {
